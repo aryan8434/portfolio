@@ -1,0 +1,44 @@
+.logo {
+  width: 100px;
+}
+
+li {
+  font-size: 18px;
+  color: rgb(248, 5, 5);
+}
+
+li:hover {
+  transform: scale(1.15);
+  transition: 0.3s;
+}
+
+.theme-btn {
+  position: relative;
+}
+
+.theme-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  /* 👈 BELOW the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.95);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  /* 👈 important */
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-btn:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+}

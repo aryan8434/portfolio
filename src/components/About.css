@@ -1,0 +1,120 @@
+.about {
+  background-color: aqua;
+  min-height: 100%;
+  margin-left: -15%;
+  display: flex;
+  gap: 2rem;
+}
+
+.skills {
+  height: 80vh;
+}
+
+.details {
+  color: black;
+  font-family: "Courier New", Courier, monospace;
+  font-size: larger;
+}
+
+a {
+  color: blue;
+  font-weight: 400;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+/* Resume modal styles */
+
+.resume-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 24px;
+}
+
+.resume-content {
+  position: relative;
+  width: 90%;
+  max-width: 1000px;
+  height: 85vh;
+  background: #be0f0f;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+}
+
+.resume-close {
+  position: absolute;
+  top: 10px;
+  right: 16%;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+.resume-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .resume-content {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+}
+
+/* Tooltip styles for the external profile links */
+
+.about .leetcode,
+.about .geeks {
+  position: relative;
+  cursor: pointer;
+  color: inherit;
+  text-decoration: underline;
+}
+
+.about .leetcode::after,
+.about .geeks::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.about .leetcode:hover::after,
+.about .geeks:hover::after,
+.about .leetcode:focus::after,
+.about .geeks:focus::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Ensure tooltip stays visible for keyboard focus */
+
+.about .leetcode:focus,
+.about .geeks:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.12);
+  outline-offset: 4px;
+}

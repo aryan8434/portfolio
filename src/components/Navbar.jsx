@@ -88,33 +88,9 @@ const Navbar = () => {
   };
 
   return (
-    <header
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        zIndex: 1100,
-        padding: "12px 20px",
-        display: "flex",
-        justifyContent: "flex-end",
-        background: "rgba(12,12,12,0.6)",
-        backdropFilter: "blur(6px)",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.25)",
-        borderBottom: "1px solid rgba(255,255,255,0.04)",
-      }}
-    >
+    <header className="navbar-header">
       <nav>
-        <ul
-          style={{
-            listStyle: "none",
-            display: "flex",
-            gap: "20px",
-            margin: 0,
-            padding: 0,
-            alignItems: "center",
-          }}
-        >
+        <ul className="navbar-list">
           <li
             style={{
               cursor: "pointer",

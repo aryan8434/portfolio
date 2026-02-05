@@ -1,46 +1,17 @@
 import { createRoot } from "react-dom/client";
-import { Suspense, useState, useRef, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Grid } from "@react-three/drei";
-import * as THREE from "three";
+import { useState, useRef, useEffect } from "react";
 import "./index.css";
-import App from "./App.jsx";
 import Navbar from "./components/Navbar.jsx";
 import "./components/Navbar.css";
-import Avatar from "./components/Avatar.jsx";
 import DotGrid from "./components/DotGrid.jsx";
 import About from "./components/About.jsx";
 import "./components/About.css";
 import Projects from "./components/Projects.jsx";
 import Contact from "./components/Contact.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
-function Scene() {
-  return (
-    <>
-      {/* Lighting */}
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <directionalLight position={[-5, 5, -5]} intensity={0.5} />
-      <pointLight position={[0, 10, 0]} intensity={0.5} />
+import Home from "./components/Home.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
-      {/* Helpers removed so avatar renders clean without guide lines */}
-
-      {/* Controls */}
-      <OrbitControls
-        enableZoom={true}
-        enablePan={true}
-        enableRotate={true}
-        minDistance={1}
-        maxDistance={20}
-      />
-
-      {/* Avatar */}
-      <Suspense fallback={null}>
-        <Avatar />
-      </Suspense>
-    </>
-  );
-}
 
 function RootApp() {
   const containerRef = useRef(null);
@@ -67,12 +38,12 @@ function RootApp() {
         if (darkVideoRef.current && darkVideoRef.current.paused) {
           await darkVideoRef.current.play().catch(() => {});
         }
-      } catch (e) {}
+      } catch (e) { /* ignore */ }
       try {
         if (lightVideoRef.current && lightVideoRef.current.paused) {
           await lightVideoRef.current.play().catch(() => {});
         }
-      } catch (e) {}
+      } catch (e) { /* ignore */ }
     };
     tryPlay();
     // Also attempt a delayed play in case loading takes longer
@@ -83,29 +54,10 @@ function RootApp() {
     };
   }, [isDark]);
 
-  useEffect(() => {
-    const sc = containerRef.current;
-    if (!sc) return;
 
-    const onWheel = (e) => {
-      // Add a small extra scroll (10%) but DON'T prevent default so reverse scrolling and momentum work
-      const extra = e.deltaY * 0.1; // 10% extra
-      const maxTop = sc.scrollHeight - sc.clientHeight;
-
-      // Schedule after default scrolling to preserve native behavior and momentum
-      window.requestAnimationFrame(() => {
-        let target = sc.scrollTop + extra;
-        if (target < 0) target = 0;
-        if (target > maxTop) target = maxTop;
-        sc.scrollTo({ top: target, behavior: "auto" });
-      });
-    };
-
-    sc.addEventListener("wheel", onWheel, { passive: true });
-    return () => sc.removeEventListener("wheel", onWheel);
-  }, []);
 
   return (
+    <ErrorBoundary>
     <div
       ref={containerRef}
       style={{
@@ -149,72 +101,15 @@ function RootApp() {
 
       <Navbar />
 
-      {/* Page 1: Home (Avatar + Hello) */}
-      <section
-        id="home"
-        style={{
-          position: "relative",
-          height: "100vh",
-          boxSizing: "border-box",
-          display: "flex",
-          width: "100%",
-          paddingTop: "64px",
-          scrollMarginTop: "64px",
-          overflow: "hidden",
-          scrollSnapAlign: "start",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "transparent",
-            zIndex: -1,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            width: "50%",
-            height: "100%",
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              maxWidth: "600px",
-              maxHeight: "600px",
-              backgroundColor: isDark ? "grey" : "#ffffff",
-              border: "3px solid #000000",
-              borderRadius: "8px",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-              overflow: "hidden",
-              position: "relative",
-              transition: "background-color 360ms ease",
-            }}
-          >
-            <Canvas
-              camera={{ position: [0, 2, 5], fov: 50 }}
-              style={{ width: "100%", height: "100%" }}
-              gl={{ antialias: true }}
-            >
-              <Scene />
-            </Canvas>
-          </div>
-        </div>
 
-        <div style={{ width: "50%", padding: "20px", boxSizing: "border-box" }}>
-          <App />
+      {/* Page 1: Home (Avatar + Hello) */}
+      <section id="home" className="home-section" style={{ scrollSnapAlign: 'start' }}>
+        <div className="home-bg-overlay" />
+        
+        <div className="chat-container-wrapper" style={{ width: '100%', flexDirection: 'column' }}>
+          <div className="chat-box" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+             <Home />
+          </div>
         </div>
       </section>
 
@@ -397,6 +292,7 @@ function RootApp() {
         </div>
       </section>
     </div>
+    </ErrorBoundary>
   );
 }
 

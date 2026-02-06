@@ -35,6 +35,12 @@ Key Projects to Highlight:
 2. Travo AI (Travel): "An AI-powered travel assistant that simplifies booking via natural language. One of his finest projects, currently in development."
 3. Multidoc Querying System (RAG): "A powerful tool allowing users to query multiple documents simultaneously—showing his backend/AI chops."
 
+About internships:
+1. 1st internship at Octanet which was remote from May 2024 to July 2024 as a frontend developer which was more of a learning experience and focussed 
+on projects.
+2. 2nd internship at Proscon Automation Kota as a frontend developer from June 2025 to August 2025. Main role was to fix company's old website and use react
+memos to fake faster, it was made around 40% more faster.
+
 Handling Queries:
 - "Hire him?": YES! Highlight his full-stack skills, problem-solving ability, and management skills (like integrating this AI).
 - "Contact info?": Direct them to the form below, mention arkrraj@gmail.com, or call +91 8434827927.
@@ -48,6 +54,7 @@ send an email you need their email, name and message.
   {"action": "EMAIL", "user_name": "Name", "user_email": "Email", "message": "The message"}
 - Do not output markdown code blocks (like \`\`\`json). Just the raw JSON string.
 -Also do not show this json script to users keep it yourself
+
 
 My personal details;
 -My cgpa is 8.13, I am from Rajasthan Technical University, Kota
@@ -65,6 +72,8 @@ type of emojis. try to flirt with them.
 -Only mention about gf only if someone ask about gf directly or about love life , if they ask personal life just mention once about love life along with family.
 if someone ask about his relationship status tell them I know his relationship status but I won't tell you 😉😜.
 Also do tell family is supportive.
+-If they ask something about my personal details or family don't deny youi dont know, just tell tehm I have his details secret and I won't share you 😉😜. Lets ask
+about professional details instead.
 Formatting:
 - Do not use bold formatting (**).
 - Use emojis sparingly but effectively 🚀.`;
@@ -185,14 +194,18 @@ const Home = () => {
         }]);
       }
     } catch (e) {
-      console.error("Email Parsing Failed", e);
-      // Fallback: Show the raw response to the user if parsing failed, so they see something.
-      // Or just generic error. Let's show the AI response as text if it failed to be an action?
-      // Actually, if it failed parsing, it might have been meant as text. 
-      // check if we should fallback to adding it as a message.
+      console.error("Email Processing Failed:", e);
+      
+      let errorMessage = "I tried to send an email, but something went wrong. Please use the contact form below!";
+      
+      // specific check for missing keys or bad request
+      if (e?.text?.includes("Public Key") || e?.message?.includes("Public Key")) {
+        errorMessage = "⚠️ System Error: Missing EmailJS Public Key. Please check Vercel Environment Variables.";
+      }
+
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: jsonString // Show the raw response if parsing failed, might be helpful context
+        content: errorMessage 
       }]);
     } finally {
       setIsLoading(false);
@@ -210,9 +223,12 @@ const Home = () => {
     setIsLoading(true);
 
     try {
+      // Limit history to last 6 messages to save tokens (prevent 429 Rate Limit)
+      const recentMessages = newMessages.slice(-6); 
+
       const apiMessages = [
         { role: "system", content: SYSTEM_PROMPT },
-        ...newMessages.map(m => ({ role: m.role, content: m.content }))
+        ...recentMessages.map(m => ({ role: m.role, content: m.content }))
       ];
 
       const completion = await groq.chat.completions.create({

@@ -3,6 +3,20 @@ import './AIChat.css';
 import emailjs from "@emailjs/browser";
 import ShinyText from "./ShinyText";
 import Groq from "groq-sdk";
+import { db } from "../config/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+// Helper to get/set persistent Device ID
+const getDeviceId = () => {
+  let deviceId = document.cookie.split('; ').find(row => row.startsWith('device_id='))?.split('=')[1];
+  if (!deviceId) {
+    deviceId = crypto.randomUUID();
+    const expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1); // 1 year expiry
+    document.cookie = `device_id=${deviceId}; expires=${expires.toUTCString()}; path=/; SameSite=Strict`;
+  }
+  return deviceId;
+};
 
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
@@ -118,10 +132,15 @@ const Home = () => {
   }, []);
 
   const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
+    // Small timeout to ensure DOM has updated with new message height
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, 100);
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
 
   useEffect(() => {
     // Generate or retrieve session ID
@@ -159,13 +178,28 @@ const Home = () => {
   }, [messages]);
 
   useEffect(() => {
-    scrollToBottom();
+// Imports moved to top
   }, [messages]);
+const getDeviceId = () => {
+  let deviceId = document.cookie.split('; ').find(row => row.startsWith('device_id='))?.split('=')[1];
+  if (!deviceId) {
+    deviceId = crypto.randomUUID();
+    const expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1); // 1 year expiry
+    document.cookie = `device_id=${deviceId}; expires=${expires.toUTCString()}; path=/; SameSite=Strict`;
+  }
+  return deviceId;
+};
+
+// ... existing code ...
 
   const handleEmailTrigger = async (jsonString) => {
-    console.log("Attempting to parse:", jsonString); // DEBUG: See what the AI actually sent
+    console.log("Attempting to parse:", jsonString); 
+    const sessionId = localStorage.getItem('chatSessionId');
+    const deviceId = getDeviceId();
+
     try {
-      // Find JSON object within the string (handles potential markdown or extra text)
+      // Find JSON object within the string
       const start = jsonString.indexOf('{');
       const end = jsonString.lastIndexOf('}');
       
@@ -176,9 +210,23 @@ const Home = () => {
       const cleanJson = jsonString.substring(start, end + 1);
       const emailData = JSON.parse(cleanJson);
 
+      // Log Email Action to Firestore (User Folder)
+      try {
+        await addDoc(collection(db, "chat_sessions", deviceId, "messages"), {
+          text: jsonString,
+          sender: "ai",
+          action: "EMAIL_TRIGGERED",
+          emailData: emailData,
+          sessionId: sessionId,
+          timestamp: serverTimestamp()
+        });
+      } catch (err) {
+        console.error("Error logging email action to DB:", err);
+      }
+
       if (emailData.action === "EMAIL") {
         setIsLoading(true);
-        // Trigger EmailJS
+        // ... existing email sending logic ...
         const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
         const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
         const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
@@ -189,25 +237,40 @@ const Home = () => {
           message: emailData.message,
         }, publicKey);
 
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: `✅ I've sent that email to Aryan for you!` 
-        }]);
+        const successMsg = `✅ I've sent that email to Aryan for you!`;
+        setMessages(prev => [...prev, { role: 'assistant', content: successMsg }]);
+        
+        // Log Success Message
+         try {
+          await addDoc(collection(db, "chat_sessions", deviceId, "messages"), {
+            text: successMsg,
+            sender: "ai",
+            sessionId: sessionId,
+            timestamp: serverTimestamp()
+          });
+        } catch (err) {}
       }
     } catch (e) {
       console.error("Email Processing Failed:", e);
-      
       let errorMessage = "I tried to send an email, but something went wrong. Please use the contact form below!";
       
-      // specific check for missing keys or bad request
       if (e?.text?.includes("Public Key") || e?.message?.includes("Public Key")) {
         errorMessage = "⚠️ System Error: Missing EmailJS Public Key. Please check Vercel Environment Variables.";
       }
 
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: errorMessage 
-      }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
+
+      // Log Error Message
+      try {
+        await addDoc(collection(db, "chat_sessions", deviceId, "messages"), {
+          text: errorMessage,
+          sender: "ai",
+          isError: true,
+          sessionId: sessionId,
+          timestamp: serverTimestamp()
+        });
+      } catch (err) {}
+
     } finally {
       setIsLoading(false);
     }
@@ -218,13 +281,27 @@ const Home = () => {
 
     const userMessage = text.trim();
     setInput('');
+    const sessionId = localStorage.getItem('chatSessionId');
+    const deviceId = getDeviceId();
     
+    // Log User Message to Firestore (User Folder)
+    try {
+      await addDoc(collection(db, "chat_sessions", deviceId, "messages"), {
+        text: userMessage,
+        sender: "user",
+        sessionId: sessionId,
+        timestamp: serverTimestamp()
+      });
+    } catch (err) {
+      console.error("Error saving user message:", err);
+    }
+
     const newMessages = [...messages, { role: 'user', content: userMessage }];
     setMessages(newMessages);
     setIsLoading(true);
 
     try {
-      // Limit history to last 6 messages to save tokens (prevent 429 Rate Limit)
+      // Limit history...
       const recentMessages = newMessages.slice(-6); 
 
       const apiMessages = [
@@ -246,14 +323,26 @@ const Home = () => {
         await handleEmailTrigger(aiResponse);
       } else {
         setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+
+        // Log AI Response to Firestore (User Folder)
+        try {
+          await addDoc(collection(db, "chat_sessions", deviceId, "messages"), {
+            text: aiResponse,
+            sender: "ai",
+            sessionId: sessionId,
+            timestamp: serverTimestamp()
+          });
+        } catch (err) {
+           console.error("Error saving AI message:", err);
+        }
       }
 
     } catch (error) {
-      console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: `Connection Error: ${error.message || "Unknown error"}. Check console for details.` 
-      }]);
+       // ... existing error handling ...
+       // (Recommend logging error to DB here too if desired)
+       console.error("Chat Error:", error);
+       const errorMsg = `Connection Error: ${error.message || "Unknown error"}. Check console for details.`;
+       setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
     } finally {
       setIsLoading(false);
     }

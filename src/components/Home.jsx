@@ -42,7 +42,8 @@ Handling Queries:
 
 TOOL USAGE (Sending Emails):
 - If a user explicitly asks you to send an email to Aryan or provide feedback.
-- FIRST, ask for their Name and Email (if you don't have it).
+- FIRST, ask for their Name ,email and message what they need to send, if user refuses to share any of them, do not send an email. Tell user to 
+send an email you need their email, name and message.
 - ONCE you have the Name, Email, and Message, output a VALID JSON object in this EXACT format (no other text):
   {"action": "EMAIL", "user_name": "Name", "user_email": "Email", "message": "The message"}
 - Do not output markdown code blocks (like \`\`\`json). Just the raw JSON string.
@@ -225,7 +226,7 @@ const Home = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', height: '100%', width: '100%', alignItems: 'center',gap:"20%" }}>
+    <div className="home-main-container">
       
       {/* AI Chat Component */}
       <div className="ai-chat-container">

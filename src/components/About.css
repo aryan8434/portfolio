@@ -118,3 +118,28 @@ a:hover {
   outline: 2px solid rgba(255, 255, 255, 0.12);
   outline-offset: 4px;
 }
+
+/* Mobile Responsiveness for About Section */
+@media (max-width: 768px) {
+  .about {
+    flex-direction: column;
+    margin-left: 0; /* Reset negative margin */
+    padding: 20px;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .skills {
+    height: auto;
+    width: 60%; /* Reduce size on mobile */
+    max-width: 300px;
+    border-radius: 50%; /* Optional: make it look like a profile pic if it isn't already? The class is "skills" but it's an img src="skills.png". User said "photo". */
+    margin-bottom: 20px;
+  }
+
+  .details {
+    width: 100%;
+    font-size: 1rem; /* Adjust font size */
+  }
+}

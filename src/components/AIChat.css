@@ -1,6 +1,8 @@
 .ai-chat-container {
   width: 50%;
-  height: 90vh;
+  
+  height: 100vh;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   border-radius: 12px;
@@ -15,6 +17,7 @@
 }
 
 .ai-chat-header {
+  
   padding: 16px 20px;
   background: rgba(30, 30, 30, 0.8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -244,4 +247,35 @@
   background: #f1f5f9;
   color: #4f46e5;
   border-color: #4f46e5;
+}
+
+/* Main Container Layout */
+.home-main-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  gap: 20%;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .home-main-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    overflow-y: auto;
+  }
+
+  .ai-chat-container {
+    width: 95%; /* Mobile width optimization */
+    margin-left: 0;
+    height: 75vh;
+    margin-top: 10px;
+  }
+
+  .ai-chat-header {
+    margin-top: 0;
+  }
 }

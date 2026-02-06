@@ -130,15 +130,6 @@ const Home = () => {
       sessionId = Math.random().toString(36).substring(7);
       localStorage.setItem('chatSessionId', sessionId);
     }
-
-    // DEBUG: Check Environment Variables (Logs to Console)
-    console.log("--- Environment Health Check ---");
-    console.log("GROQ API KEY:", import.meta.env.VITE_GROQ_API_KEY ? "✅ Loaded" : "❌ MISSING");
-    console.log("EMAILJS PUBLIC KEY:", import.meta.env.VITE_EMAILJS_PUBLIC_KEY ? "✅ Loaded" : "❌ MISSING");
-    console.log("EMAILJS SERVICE ID:", import.meta.env.VITE_EMAILJS_SERVICE_ID ? "✅ Loaded" : "❌ MISSING");
-    console.log("EMAILJS TEMPLATE ID:", import.meta.env.VITE_EMAILJS_TEMPLATE_ID ? "✅ Loaded" : "❌ MISSING");
-    console.log("--------------------------------");
-
   }, []);
 
   useEffect(() => {

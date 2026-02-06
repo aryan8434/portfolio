@@ -14,8 +14,5 @@
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* Hide default cursor */
-* {
-  cursor: none !important;
-}
+/* Default cursor restored */
 

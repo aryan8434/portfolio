@@ -15,7 +15,7 @@ You are "Nova", an intelligent AI assistant living inside Aryan's portfolio webs
 Your Personality:
 - Professional but Witty: You are capable and confident. Use a friendly, conversational tone.
 - Concise: Recruiters are busy. Keep most answers to 2-3 sentences unless asked for details.
-- Enthusiastic: You genuinely believe Aryan is a great developer (because he is!).
+- Enthusiastic: You genuinely believe Aryan is a great developer.
 
 Aryan's Profile (The "User"):
 - Name: Aryan
@@ -41,7 +41,7 @@ Handling Queries:
 - "Unknown topics": Playfully deflect: "I'm optimized for coding and Aryan's career, not for [topic], but I bet Aryan could build an app for that!"
 
 TOOL USAGE (Sending Emails):
-- If a user explicitly asks you to send an email to Aryan or provide feedback.
+- If a user  asks you to send an email to Aryan or provide feedback.
 - FIRST, ask for their Name ,email and message what they need to send, if user refuses to share any of them, do not send an email. Tell user to 
 send an email you need their email, name and message.
 - ONCE you have the Name, Email, and Message, output a VALID JSON object in this EXACT format (no other text):
@@ -53,9 +53,14 @@ My personal details;
 -I am in 4th year of Computer Science and Engineering branch.
 -My 12th percent is 81.8 from CBSE board
 -My 10th percent is 90.33.8 from ICSE board
-- I am from Bhagalpur,Bihar
+- I am from Bhagalpur, Bihar
 - I am currently live in Kota, Rajasthan.
-- If someone ask about gf tell them I know his gf name and how many gf he had but I won't tell you 😉😜. just deny and use these type of emojis
+-If someone ask about personal life tell them I know his all personal details like family, responsibilites,  and even his love life like gf , but obviosuly 
+I wont share you 😉😜. Tell them exactly like this
+- if some ask lke this I want to know his personal life ❤️ then tell tel "I know his perosnal details and privacy like family, responsibilites,  and even his gf name , but obviosuly 
+I wont share you 😉😜. Tell them exactly like this
+- If someone ask about gf tell them I know his gf name starts with 'J','L' or any random letter. and how many gf he had but I won't tell you 😉😜. just deny and use these 
+type of emojis. try to flirt with them.
 Formatting:
 - Do not use bold formatting (**).
 - Use emojis sparingly but effectively 🚀.`;
@@ -63,7 +68,7 @@ Formatting:
 const Home = () => {
   // Chat State
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm Nova, Aryan's AI Assistant. Ask me anything about his projects, his grades, or ask me to send him an email!" }
+    { role: 'assistant', content: "Hi! I'm Nova, Aryan's AI Assistant. Ask me anything about his projects, his grades, his personal life or ask me to send him an email!" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -145,7 +150,17 @@ const Home = () => {
 
   const handleEmailTrigger = async (jsonString) => {
     try {
-      const emailData = JSON.parse(jsonString);
+      // Find JSON object within the string (handles potential markdown or extra text)
+      const start = jsonString.indexOf('{');
+      const end = jsonString.lastIndexOf('}');
+      
+      if (start === -1 || end === -1 || start >= end) {
+        throw new Error("Invalid format: No JSON object found");
+      }
+
+      const cleanJson = jsonString.substring(start, end + 1);
+      const emailData = JSON.parse(cleanJson);
+
       if (emailData.action === "EMAIL") {
         setIsLoading(true);
         // Trigger EmailJS
@@ -166,9 +181,13 @@ const Home = () => {
       }
     } catch (e) {
       console.error("Email Parsing Failed", e);
+      // Fallback: Show the raw response to the user if parsing failed, so they see something.
+      // Or just generic error. Let's show the AI response as text if it failed to be an action?
+      // Actually, if it failed parsing, it might have been meant as text. 
+      // check if we should fallback to adding it as a message.
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I tried to send an email, but something went wrong. Please use the contact form below!" 
+        content: jsonString // Show the raw response if parsing failed, might be helpful context
       }]);
     } finally {
       setIsLoading(false);
@@ -200,8 +219,8 @@ const Home = () => {
 
       const aiResponse = completion.choices[0]?.message?.content || "I'm having trouble thinking right now.";
 
-      // Check if response is a JSON action
-      if (aiResponse.trim().startsWith('{') && aiResponse.trim().includes('"action": "EMAIL"')) {
+      // Check if response contains the email action key
+      if (aiResponse.includes('"action": "EMAIL"')) {
         await handleEmailTrigger(aiResponse);
       } else {
         setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
@@ -257,25 +276,31 @@ const Home = () => {
               className="quick-btn" 
               onClick={() => handleSend("I want to send an email to Aryan")}
             >
-              📧 Send Aryan Email
+              Send Aryan Email
+            </button>
+            <button 
+              className="quick-btn" 
+              onClick={() => handleSend("I want to know his personal life ❤️")}
+            >
+              His personal life ❤️
             </button>
             <button 
               className="quick-btn"
               onClick={() => handleSend("What is Aryan's best project?")}
             >
-              🏆 His Best Project
+               His Best Project
             </button>
             <button 
               className="quick-btn"
               onClick={() => handleSend("What were Aryan's Class 10th marks?")}
             >
-              � Class 10 Marks
+              Class 10 Marks
             </button>
             <button 
               className="quick-btn"
               onClick={() => handleSend("Which college is Aryan in?")}
             >
-              � Which College?
+              Which College?
             </button>
           </div>
         )}

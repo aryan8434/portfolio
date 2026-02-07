@@ -3,17 +3,18 @@ import "./Projects.css";
 
 const placeholders = [
   {
+    title: "Travo AI",
+    desc: "Book your entire trip and resolve travel distress in minutes with simple text commands.",
+    url: "http://65.1.131.213:5000/",
+    image: "/travo.png",
+  },
+  {
     title: "Shopper",
     desc: "An e-commerce site to enhance your shopping experience",
     url: "https://rainbow-beijinho-b9ccbd.netlify.app/",
     image: "/shopper.png",
   },
-  {
-    title: "Travo AI",
-    desc: "Book your entire trip and resolve travel distress in minutes with simple text commands.",
-    url: "https://travo-front-jjko.vercel.app/",
-    image: "/travo.png",
-  },
+  
   {
     title: "Multidoc Querying System",
     desc: "Ask one question. Get answers from all your documents.",
@@ -22,7 +23,7 @@ const placeholders = [
   },
 ];
 
-const Projects = () => {
+const Projects = ({ isDark }) => {
   const n = placeholders.length;
   const [index, setIndex] = useState(0); // currently focused project index
 
@@ -33,12 +34,13 @@ const Projects = () => {
 
   return (
     <section className="projects-section" aria-label="Projects">
-      <h2 style={{ color: "#fff", marginBottom: 16 }}>Projects</h2>
+      <h2 style={{ marginBottom: 16 }}>Projects</h2>
 
       <div className="projects-carousel" aria-roledescription="carousel">
         <button
           className="carousel-arrow left"
           onClick={prev}
+          style={{ color: isDark ? "white" : "black" }}
           aria-label="Previous project"
         >
           ‹
@@ -97,6 +99,7 @@ const Projects = () => {
 
         <button
           className="carousel-arrow right"
+          style={{ color: isDark ? "white" : "black" }}
           onClick={next}
           aria-label="Next project"
         >

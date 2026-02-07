@@ -240,10 +240,11 @@ function RootApp() {
             zIndex: 1,
             maxWidth: 1100,
             margin: "40px auto",
-            color: "#fff",
+            color: isDark ? "#fff" : "#000",
+            transition: "color 360ms ease",
           }}
         >
-          <Projects />
+          <Projects isDark={isDark} />
         </div>
       </section>
 

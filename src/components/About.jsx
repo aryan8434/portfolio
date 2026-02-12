@@ -18,7 +18,7 @@ const SkillCategory = ({ title, skills }) => (
   </div>
 );
 
-const About = () => {
+const About = ({ isDark = true }) => {
   const [showResume, setShowResume] = useState(false);
 
   useEffect(() => {
@@ -33,82 +33,107 @@ const About = () => {
   const closeResume = () => setShowResume(false);
 
   return (
-    <div className="about">
-      <div className="details">
-        <h1>About Me</h1>I am a final-year Computer Science student with strong
-        skills in competitive programming and full-stack web development. I
-        regularly solve algorithmic problems on platforms like{" "}
-        <a
-          className="leetcode"
-          href="https://leetcode.com/u/aryan8434/"
-          data-tooltip="Visit LeetCode"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Visit LeetCode"
-        >
-          LeetCode
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://www.geeksforgeeks.org/profile/aryan8434"
-          className="geeks"
-          data-tooltip="Visit GeeksForGeeks"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Visit GeeksForGeeks"
-        >
-          GeeksForGeeks
-        </a>
-        <br />
-        <br />
-        <button
-          onClick={openResume}
-          className="bg-purple-500 transition duration-150 hover:bg-purple-800 hover:font-bold text-white py-3 px-5"
-          aria-haspopup="dialog"
-        >
-          Resume
-        </button>
-        {showResume && (
-          <div
-            className="resume-overlay"
-            onClick={closeResume}
-            role="presentation"
-          >
-            <div
-              className="resume-content"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Resume dialog"
-              onClick={(e) => e.stopPropagation()}
+    <div className={`about ${isDark ? "dark" : "light"}`}>
+      <div className="about-card">
+        <aside className="about-avatar" aria-hidden="true">
+          <img
+            src="/avatar.png"
+            alt="Aryan avatar"
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+        </aside>
+        <div className="details">
+          <h1>About Me</h1>
+          <p>
+            I am a final-year Computer Science student with strong skills in
+            competitive programming and full-stack web development. I regularly
+            solve algorithmic problems on platforms like{" "}
+            <a
+              className="leetcode"
+              href="https://leetcode.com/u/aryan8434/"
+              data-tooltip="Visit LeetCode"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit LeetCode"
             >
-              <button
-                className="resume-close bg-red-400 font-bold transition delay-50 hover:bg-red-600 hover:font-extrabold"
-                onClick={closeResume}
-                aria-label="Close resume"
-              >
-                Close
-              </button>
-              <iframe
-                src="/resume.pdf"
-                title="Resume"
-                className="resume-iframe"
-              />
-            </div>
-          
-          </div>
-        )}
-        <br />
-        <br />
-        
+              LeetCode
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://www.geeksforgeeks.org/profile/aryan8434"
+              className="geeks"
+              data-tooltip="Visit GeeksForGeeks"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit GeeksForGeeks"
+            >
+              GeeksForGeeks
+            </a>
+          </p>
 
-        <h2>Skills</h2>
-        <div className="mt-8">
-          <SkillCategory title="Programming Languages" skills={["C++", "C", "Python", "JavaScript"]} />
-          <SkillCategory title="Backend Development" skills={["Express.js", "Backend System Design"]} />
-          <SkillCategory title="API Development" skills={["REST APIs", "API Design", "JWT Authentication"]} />
-          <SkillCategory title="Databases & Clouds" skills={["PostgreSQL", "MongoDB", "Amazon EC2"]} />
+          <div className="about-actions">
+            <button
+              onClick={openResume}
+              className="btn-primary"
+              aria-haspopup="dialog"
+            >
+              View Resume
+            </button>
+          </div>
+          {showResume && (
+            <div
+              className="resume-overlay"
+              onClick={closeResume}
+              role="presentation"
+            >
+              <div
+                className="resume-content"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Resume dialog"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="resume-close bg-red-400 font-bold transition delay-50 hover:bg-red-600 hover:font-extrabold"
+                  onClick={closeResume}
+                  aria-label="Close resume"
+                >
+                  Close
+                </button>
+                <iframe
+                  src="/resume.pdf"
+                  title="Resume"
+                  className="resume-iframe"
+                />
+              </div>
+            </div>
+          )}
+          <br />
+          <br />
+
+          <h2>Skills</h2>
+          <div className="mt-8 skills-grid">
+            <SkillCategory
+              title="Programming Languages"
+              skills={["C++", "C", "Python", "JavaScript"]}
+            />
+            <SkillCategory
+              title="Backend"
+              skills={["Express.js", "Node.js", "System Design"]}
+            />
+            <SkillCategory
+              title="APIs & Auth"
+              skills={["REST APIs", "GraphQL", "JWT"]}
+            />
+            <SkillCategory
+              title="Databases & Cloud"
+              skills={["PostgreSQL", "MongoDB", "AWS"]}
+            />
+          </div>
         </div>
-        </div>
+      </div>
     </div>
   );
 };

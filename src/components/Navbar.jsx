@@ -97,11 +97,21 @@ const Navbar = () => {
               fontFamily:
                 "'moogalator-font','Baby Gemoy', 'Fredoka One', cursive",
             }}
-            onClick={() => scrollTo("home")}
+            onClick={() => {
+              scrollTo("home");
+              try {
+                window.dispatchEvent(new CustomEvent("homeClicked"));
+              } catch {}
+            }}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") scrollTo("home");
+              if (e.key === "Enter" || e.key === " ") {
+                scrollTo("home");
+                try {
+                  window.dispatchEvent(new CustomEvent("homeClicked"));
+                } catch {}
+              }
             }}
           >
             Home

@@ -12,7 +12,6 @@ import CustomCursor from "./components/CustomCursor.jsx";
 import Home from "./components/Home.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
-
 function RootApp() {
   const containerRef = useRef(null);
   // Default to dark mode on initial render to avoid flicker
@@ -38,12 +37,16 @@ function RootApp() {
         if (darkVideoRef.current && darkVideoRef.current.paused) {
           await darkVideoRef.current.play().catch(() => {});
         }
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        /* ignore */
+      }
       try {
         if (lightVideoRef.current && lightVideoRef.current.paused) {
           await lightVideoRef.current.play().catch(() => {});
         }
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        /* ignore */
+      }
     };
     tryPlay();
     // Also attempt a delayed play in case loading takes longer
@@ -54,245 +57,277 @@ function RootApp() {
     };
   }, [isDark]);
 
-
-
   return (
     <ErrorBoundary>
-    <div
-      ref={containerRef}
-      style={{
-        width: "100%",
-        height: "100vh",
-        display: "block",
-        position: "relative",
-        overflowY: "auto",
-        scrollSnapType: "y mandatory",
-      }}
-    >
-      <CustomCursor />
-      {/* Dot Grid Background */}
       <div
+        ref={containerRef}
         style={{
           width: "100%",
-          height: "100%",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: -2,
-          // White page background in light mode so black dots are visible
-          background: isDark ? "transparent" : "#ffffff",
-          transition: "background 360ms ease",
+          height: "100vh",
+          display: "block",
+          position: "relative",
+          overflowY: "auto",
+          scrollSnapType: "y mandatory",
         }}
       >
-        <DotGrid
-          dotSize={3}
-          gap={32}
-          baseColor={isDark ? "#ffffff" : "#000000"}
-          activeColor={isDark ? "#ffffff" : "#000000"}
-          proximity={150}
-          speedTrigger={100}
-          shockRadius={250}
-          shockStrength={5}
-          maxSpeed={5000}
-          resistance={750}
-          returnDuration={1.5}
-        />
-      </div>
+        <CustomCursor />
+        {/* Dot Grid Background */}
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: -2,
+            // White page background in light mode so black dots are visible
+            background: isDark ? "transparent" : "#ffffff",
+            transition: "background 360ms ease",
+          }}
+        >
+          <DotGrid
+            dotSize={3}
+            gap={32}
+            baseColor={isDark ? "#ffffff" : "#000000"}
+            activeColor={isDark ? "#7c3aed" : "#ec4899"}
+            proximity={150}
+            speedTrigger={100}
+            shockRadius={250}
+            shockStrength={5}
+            maxSpeed={5000}
+            resistance={750}
+            returnDuration={1.5}
+          />
+        </div>
 
-      <Navbar />
+        <Navbar />
 
+        {/* Page 1: Home (Avatar + Hello) */}
+        <section
+          id="home"
+          className="home-section"
+          style={{ scrollSnapAlign: "start" }}
+        >
+          <div className="home-bg-overlay" />
 
-      {/* Page 1: Home (Avatar + Hello) */}
-      <section id="home" className="home-section" style={{ scrollSnapAlign: 'start' }}>
-        <div className="home-bg-overlay" />
-        
-        <div className="chat-container-wrapper" style={{ width: '100%', flexDirection: 'column' }}>
-          <div className="chat-box" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-             <Home />
+          <div
+            className="chat-container-wrapper"
+            style={{ width: "100%", flexDirection: "column" }}
+          >
+            <div
+              className="chat-box"
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Home isDark={isDark} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Page 2: About (Navbar + About content only) */}
-      <section
-        id="about-page"
-        style={{
-          position: "relative",
-          height: "100vh",
-          boxSizing: "border-box",
-          width: "100%",
-          padding: "20px",
-          background: "transparent",
-          paddingTop: "64px",
-          overflow: "hidden",
-          scrollMarginTop: "64px",
-          scrollSnapAlign: "start",
-        }}
-      >
-        {/* About background (sits above DotGrid but behind content) */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: isDark
-              ? "linear-gradient(120deg, #0f172a 0%, #071128 100%)"
-              : "#ffffff",
-            zIndex: -1,
-            transition: "background 360ms ease",
-          }}
-        />
-
-        <div
+        {/* Page 2: About (Navbar + About content only) */}
+        <section
+          id="about-page"
           style={{
             position: "relative",
-            zIndex: 1,
-            maxWidth: 900,
-            margin: "40px auto",
-            color: isDark ? "#fff" : "#000",
-            transition: "color 360ms ease",
+            height: "100vh",
+            boxSizing: "border-box",
+            width: "100%",
+            padding: "20px",
+            background: "transparent",
+            paddingTop: "64px",
+            overflow: "hidden",
+            scrollMarginTop: "64px",
+            scrollSnapAlign: "start",
           }}
         >
-          <About />
-        </div>
-      </section>
+          {/* About background gradient (sits behind the DotGrid) */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: isDark
+                ? "linear-gradient(120deg, #0f172a 0%, #071128 100%)"
+                : "#ffffff",
+              zIndex: -2,
+              transition: "background 360ms ease",
+            }}
+          />
 
-      {/* Page 3: Projects */}
-      <section
-        id="projects"
-        style={{
-          position: "relative",
-          height: "100vh",
-          boxSizing: "border-box",
-          width: "100%",
-          padding: "20px",
-          paddingTop: "64px",
-          scrollMarginTop: "64px",
-          overflowY: "auto",
-          scrollSnapAlign: "start",
-        }}
-      >
-        {/* Background videos (cross-fade between dark/light) */}
-        <video
-          ref={darkVideoRef}
-          className="bg-video dark-video"
-          src="/bgvid.mp4"
-          preload="auto"
-          autoPlay
-          muted
-          loop
-          playsInline
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: -1,
-            opacity: isDark ? 1 : 0,
-            transition: "opacity 420ms ease",
-          }}
-        />
-        <video
-          ref={lightVideoRef}
-          className="bg-video light-video"
-          src="/light.mp4"
-          preload="auto"
-          autoPlay
-          muted
-          loop
-          playsInline
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: -1,
-            opacity: isDark ? 0 : 1,
-            transition: "opacity 420ms ease",
-          }}
-        />
-        {/* Optional overlay to darken/lighten the video for legibility with transition */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: isDark
-              ? "rgba(3, 7, 18, 0.45)"
-              : "rgba(255,255,255,0.6)",
-            zIndex: 0,
-            pointerEvents: "none",
-            transition: "background 360ms ease, opacity 360ms ease",
-          }}
-        />
+          {/* DotGrid spanning the whole about section */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: -1,
+              pointerEvents: "none",
+            }}
+          >
+            <DotGrid
+              dotSize={6}
+              gap={36}
+              baseColor={isDark ? "#ffffff22" : "#0f172a22"}
+              activeColor={isDark ? "#7c3aed" : "#ec4899"}
+              proximity={140}
+              className="about-section-dotgrid"
+            />
+          </div>
 
-        <div
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              maxWidth: 900,
+              margin: "40px auto",
+              color: isDark ? "#fff" : "#000",
+              transition: "color 360ms ease",
+            }}
+          >
+            <About isDark={isDark} />
+          </div>
+        </section>
+
+        {/* Page 3: Projects */}
+        <section
+          id="projects"
           style={{
             position: "relative",
-            zIndex: 1,
-            maxWidth: 1100,
-            margin: "40px auto",
-            color: isDark ? "#fff" : "#000",
-            transition: "color 360ms ease",
+            height: "100vh",
+            boxSizing: "border-box",
+            width: "100%",
+            padding: "20px",
+            paddingTop: "64px",
+            scrollMarginTop: "64px",
+            overflowY: "auto",
+            scrollSnapAlign: "start",
           }}
         >
-          <Projects isDark={isDark} />
-        </div>
-      </section>
+          {/* Background videos (cross-fade between dark/light) */}
+          <video
+            ref={darkVideoRef}
+            className="bg-video dark-video"
+            src="/bgvid.mp4"
+            preload="auto"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: -1,
+              opacity: isDark ? 1 : 0,
+              transition: "opacity 420ms ease",
+            }}
+          />
+          <video
+            ref={lightVideoRef}
+            className="bg-video light-video"
+            src="/light.mp4"
+            preload="auto"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: -1,
+              opacity: isDark ? 0 : 1,
+              transition: "opacity 420ms ease",
+            }}
+          />
+          {/* Optional overlay to darken/lighten the video for legibility with transition */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: isDark
+                ? "rgba(3, 7, 18, 0.45)"
+                : "rgba(255,255,255,0.6)",
+              zIndex: 0,
+              pointerEvents: "none",
+              transition: "background 360ms ease, opacity 360ms ease",
+            }}
+          />
 
-      {/* Page 4: Contact */}
-      <section
-        id="contact"
-        style={{
-          position: "relative",
-          height: "100vh",
-          boxSizing: "border-box",
-          width: "100%",
-          padding: "20px",
-          paddingTop: "64px",
-          scrollMarginTop: "64px",
-          overflowY: "auto",
-          scrollSnapAlign: "start",
-        }}
-      >
-        {/* Opaque overlay to hide DotGrid background under Contact */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: isDark
-              ? "linear-gradient(180deg, rgba(10,10,10,0.95), rgba(20,20,20,0.95))"
-              : "transparent",
-            zIndex: 0,
-            pointerEvents: "none",
-            transition: "background 360ms ease",
-          }}
-        />
-        <div
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              maxWidth: 1100,
+              margin: "40px auto",
+              color: isDark ? "#fff" : "#000",
+              transition: "color 360ms ease",
+            }}
+          >
+            <Projects isDark={isDark} />
+          </div>
+        </section>
+
+        {/* Page 4: Contact */}
+        <section
+          id="contact"
           style={{
             position: "relative",
-            zIndex: 1,
-            maxWidth: 900,
-            margin: "40px auto",
-            color: isDark ? "#fff" : "#000",
-            transition: "color 360ms ease",
+            height: "100vh",
+            boxSizing: "border-box",
+            width: "100%",
+            padding: "20px",
+            paddingTop: "64px",
+            scrollMarginTop: "64px",
+            overflowY: "auto",
+            scrollSnapAlign: "start",
           }}
         >
-          <Contact />
-        </div>
-      </section>
-    </div>
+          {/* Opaque overlay to hide DotGrid background under Contact */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: isDark
+                ? "linear-gradient(180deg, rgba(10,10,10,0.95), rgba(20,20,20,0.95))"
+                : "transparent",
+              zIndex: 0,
+              pointerEvents: "none",
+              transition: "background 360ms ease",
+            }}
+          />
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              maxWidth: 900,
+              margin: "40px auto",
+              color: isDark ? "#fff" : "#000",
+              transition: "color 360ms ease",
+            }}
+          >
+            <Contact />
+          </div>
+        </section>
+      </div>
     </ErrorBoundary>
   );
 }

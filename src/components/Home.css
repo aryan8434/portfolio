@@ -1,57 +1,85 @@
-/* Mobile First / Responsive Styles for Home Section */
+/* Full Height Centered Layout for Home */
 
-.home-section {
-    position: relative;
-    height: 100vh;
-    box-sizing: border-box;
-    display: flex;
-    width: 100%;
-    /* Increased top padding as requested for "margin top" feel */
-    padding-top: 100px;
-    scroll-margin-top: 0px;
-    overflow: hidden;
-    scroll-snap-align: start;
-    flex-direction: row; /* Default desktop */
-    align-items: center; /* Vertically center content */
+.home-main-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  /* Assuming background is handled by App or body */
 }
 
-.home-bg-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    z-index: -1;
-    pointer-events: none;
+.intro-text-container {
+  text-align: center;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.chat-container-wrapper {
-    width: 50%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
+.intro-text-h1 {
+  font-size: 6rem;
+  font-weight: bold;
+  font-family: "Fredoka One", cursive;
+  color: #16a34a;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.chat-box {
-    width: 100%;
-    height: 100%;
-    /* Removed max-height constraint to allow full screen usage */
-    background-color: transparent;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    justify-content: center; /* Center the internal AIChat container */
+.intro-text-h2 {
+  font-size: 3rem;
+  font-weight: 600;
+  font-family: "Fredoka One", cursive;
+  color: darkgreen;
+  margin-top: 10px;
+  line-height: 1.2;
 }
 
-.text-container-wrapper {
-    width: 50%;
-    padding: 20px;
-    box-sizing: border-box;
+.intro-text-h3 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  font-family: "Fredoka One", cursive;
+  color: darkgreen;
+  margin-top: 10px;
+  line-height: 1.2;
 }
 
+/* Appear animation for intro texts */
 
+@keyframes introFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.intro-text-h1,
+.intro-text-h2,
+.intro-text-h3 {
+  opacity: 0;
+  /* start hidden; JS toggles rendering */
+  animation: introFade 0.4s ease forwards;
+}
+
+/* Responsive Font Sizes */
+
+@media (max-width: 768px) {
+  .intro-text-h1 {
+    font-size: 4rem;
+  }
+  .intro-text-h2 {
+    font-size: 2rem;
+  }
+  .intro-text-h3 {
+    font-size: 1.5rem;
+  }
+}

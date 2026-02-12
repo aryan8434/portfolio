@@ -1,34 +1,200 @@
-.about {
-  background-color: aqua;
-  min-height: 100%;
-  margin-left: -15%;
-  display: flex;
-  gap: 2rem;
+:root {
+  --bg-light: #ffffff;
+  --bg-dark: #061223;
+  --card-light: #f8fafc;
+  --card-dark: #071127;
+  --muted-light: #334155;
+  --muted-dark: #94a3b8;
+  --accent: #7c3aed;
+  --glass: rgba(255, 255, 255, 0.06);
 }
 
+.about {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 28px 16px;
+  box-sizing: border-box;
+  position: relative;
+  /* needed so background dot grid can be absolutely positioned */
+}
 
+.about-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.about-bg .dot-grid {
+  width: 100%;
+  height: 100%;
+}
+
+.about .about-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* subtle opacity tweaks for dot grid per theme */
+
+.about.dark .about-bg {
+  opacity: 0.12;
+}
+
+.about.light .about-bg {
+  opacity: 0.08;
+}
+
+.about-card {
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  gap: 24px;
+  background: var(--card-dark);
+  border-radius: 12px;
+  padding: 24px;
+  align-items: flex-start;
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.45);
+}
+
+.about.light .about-card {
+  background: var(--card-light);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.about-avatar {
+  width: 140px;
+  min-width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 .details {
-  color: black;
-  font-family: "Courier New", Courier, monospace;
-  font-size: larger;
+  flex: 1;
+  color: var(--muted-dark);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial;
 }
 
-a {
-  color: blue;
-  font-weight: 400;
+.about.light .details {
+  color: var(--muted-light);
 }
 
-a:hover {
+.details h1 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  color: inherit;
+}
+
+.details p {
+  line-height: 1.6;
+  margin: 0 0 14px 0;
+  color: inherit;
+}
+
+.about-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.18);
+  transition: transform 0.12s ease;
 }
 
-/* Resume modal styles */
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.skills-grid .mb-2 {
+  background: transparent;
+  padding: 6px 0;
+}
+
+.mb-2 .text-base {
+  color: inherit;
+}
+
+.mb-2 ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 6px 0;
+  list-style: none;
+}
+
+.mb-2 li {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: inherit;
+  cursor: default;
+}
+
+.about.light .mb-2 li {
+  border-color: rgba(2, 6, 23, 0.06);
+}
+
+/* Resume modal */
 
 .resume-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(2, 6, 23, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,25 +202,38 @@ a:hover {
   padding: 24px;
 }
 
+.about.light .resume-overlay {
+  background: rgba(15, 23, 42, 0.35);
+}
+
 .resume-content {
   position: relative;
-  width: 90%;
+  width: 100%;
   max-width: 1000px;
   height: 85vh;
-  background: #be0f0f;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+}
+
+.about.light .resume-content {
+  background: var(--bg-light);
 }
 
 .resume-close {
   position: absolute;
-  top: 10px;
-  right: 16%;
-  color: #ffffff;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: #fff;
   border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
   cursor: pointer;
-  padding: 6px 8px;
 }
 
 .resume-iframe {
@@ -64,21 +243,12 @@ a:hover {
   display: block;
 }
 
-@media (max-width: 640px) {
-  .resume-content {
-    width: 100%;
-    height: 100vh;
-    border-radius: 0;
-  }
-}
-
-/* Tooltip styles for the external profile links */
+/* Links and tooltips */
 
 .about .leetcode,
 .about .geeks {
   position: relative;
-  cursor: pointer;
-  color: inherit;
+  color: var(--accent);
   text-decoration: underline;
 }
 
@@ -89,7 +259,7 @@ a:hover {
   bottom: 120%;
   left: 50%;
   transform: translateX(-50%) translateY(6px);
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(2, 6, 23, 0.88);
   color: #fff;
   padding: 6px 8px;
   border-radius: 6px;
@@ -97,47 +267,30 @@ a:hover {
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
 .about .leetcode:hover::after,
-.about .geeks:hover::after,
-.about .leetcode:focus::after,
-.about .geeks:focus::after {
+.about .geeks:hover::after {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
 
-/* Ensure tooltip stays visible for keyboard focus */
-
-.about .leetcode:focus,
-.about .geeks:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.12);
-  outline-offset: 4px;
-}
-
-/* Mobile Responsiveness for About Section */
 @media (max-width: 768px) {
-  .about {
+  .about-card {
     flex-direction: column;
-    margin-left: 0; /* Reset negative margin */
-    padding: 20px;
     align-items: center;
-    gap: 1rem;
-    text-align: center;
   }
-
-  .skills {
-    height: auto;
-    width: 60%; /* Reduce size on mobile */
-    max-width: 300px;
-    border-radius: 50%; /* Optional: make it look like a profile pic if it isn't already? The class is "skills" but it's an img src="skills.png". User said "photo". */
-    margin-bottom: 20px;
+  .about-avatar {
+    width: 120px;
+    height: 120px;
   }
-
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
   .details {
-    width: 100%;
-    font-size: 1rem; /* Adjust font size */
+    text-align: center;
   }
 }

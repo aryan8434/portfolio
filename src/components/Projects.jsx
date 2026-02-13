@@ -11,7 +11,7 @@ const placeholders = [
   {
     title: "Shopper",
     desc: "An e-commerce site to enhance your shopping experience",
-    url: "https://rainbow-beijinho-b9ccbd.netlify.app/",
+    url: "https://shopper-ai-lake.vercel.app/",
     image: "/shopper.png",
   },
   

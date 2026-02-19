@@ -99,7 +99,7 @@ const Projects = ({ isDark }) => {
 
         <button
           className="carousel-arrow right"
-          style={{ color: isDark ? "white" : "black" }}
+          style={{ color: isDark ? "white" : "white" }}
           onClick={next}
           aria-label="Next project"
         >

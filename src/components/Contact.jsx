@@ -10,6 +10,43 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
     setError("");
+
+    // --- Validation Start ---
+    const formData = new FormData(form.current);
+    const userName = formData.get("user_name");
+    const userEmail = formData.get("user_email");
+    const message = formData.get("message");
+
+    if (!userName || userName.trim() === "") {
+      setError("Please enter your name.");
+      return;
+    }
+
+    if (!userEmail || userEmail.trim() === "") {
+      setError("Please enter your email.");
+      return;
+    }
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!message || message.trim() === "") {
+      setError("Please enter a message.");
+      return;
+    }
+
+    // Count words (splitting by whitespace)
+    const wordCount = message.trim().split(/\s+/).length;
+    if (wordCount < 10) {
+      setError("Message must be at least 10 words long.");
+      return;
+    }
+    // --- Validation End ---
+
     setStatus("sending");
 
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;

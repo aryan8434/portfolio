@@ -145,41 +145,6 @@ function RootApp() {
             scrollSnapAlign: "start",
           }}
         >
-          {/* About background gradient (sits behind the DotGrid) */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: isDark
-                ? "linear-gradient(120deg, #0f172a 0%, #071128 100%)"
-                : "#ffffff",
-              zIndex: -2,
-              transition: "background 360ms ease",
-            }}
-          />
-
-          {/* DotGrid spanning the whole about section */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: -1,
-              pointerEvents: "none",
-            }}
-          >
-            <DotGrid
-              dotSize={6}
-              gap={36}
-              baseColor={isDark ? "#ffffff22" : "#0f172a22"}
-              activeColor={isDark ? "#7c3aed" : "#ec4899"}
-              proximity={140}
-              className="about-section-dotgrid"
-            />
-          </div>
-
           <div
             style={{
               position: "relative",
@@ -209,66 +174,6 @@ function RootApp() {
             scrollSnapAlign: "start",
           }}
         >
-          {/* Background videos (cross-fade between dark/light) */}
-          <video
-            ref={darkVideoRef}
-            className="bg-video dark-video"
-            src="/bgvid.mp4"
-            preload="auto"
-            autoPlay
-            muted
-            loop
-            playsInline
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              zIndex: -1,
-              opacity: isDark ? 1 : 0,
-              transition: "opacity 420ms ease",
-            }}
-          />
-          <video
-            ref={lightVideoRef}
-            className="bg-video light-video"
-            src="/light.mp4"
-            preload="auto"
-            autoPlay
-            muted
-            loop
-            playsInline
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              zIndex: -1,
-              opacity: isDark ? 0 : 1,
-              transition: "opacity 420ms ease",
-            }}
-          />
-          {/* Optional overlay to darken/lighten the video for legibility with transition */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: isDark
-                ? "rgba(3, 7, 18, 0.45)"
-                : "rgba(255,255,255,0.6)",
-              zIndex: 0,
-              pointerEvents: "none",
-              transition: "background 360ms ease, opacity 360ms ease",
-            }}
-          />
-
           <div
             style={{
               position: "relative",
@@ -298,22 +203,7 @@ function RootApp() {
             scrollSnapAlign: "start",
           }}
         >
-          {/* Opaque overlay to hide DotGrid background under Contact */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: isDark
-                ? "linear-gradient(180deg, rgba(10,10,10,0.95), rgba(20,20,20,0.95))"
-                : "transparent",
-              zIndex: 0,
-              pointerEvents: "none",
-              transition: "background 360ms ease",
-            }}
-          />
+          {/* Opaque overlay removed to let DotGrid show through */}
           <div
             style={{
               position: "relative",

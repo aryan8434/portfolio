@@ -22,8 +22,8 @@
 }
 
 .project-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(212, 208, 208, 0);
+  border: 1px solid rgba(0, 0, 0, 0.5); /* Dark mode: Black border */
   padding: 22px;
   border-radius: 14px;
   display: flex;
@@ -120,7 +120,7 @@
 }
 
 .carousel-arrow {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.993);
   color: #fff;
   border: none;
   width: 52px;
@@ -170,4 +170,8 @@
     height: 40px;
     font-size: 20px;
   }
+}
+
+html:not(.dark) .project-card {
+  border: 1px solid rgba(255, 255, 255, 0.8); /* Light mode: White border */
 }

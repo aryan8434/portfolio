@@ -45,7 +45,7 @@ const Home = ({ isDark }) => {
               text="Hello!"
               speed={2}
               delay={0}
-              color={isDark ? "#c9c6c6ff" : "black"}
+              color={isDark ? "#c9c6c6ff" : "purple"}
               shineColor="pink"
               spread={120}
               direction="left"
@@ -60,7 +60,7 @@ const Home = ({ isDark }) => {
               text="My name is Aryan"
               speed={2}
               delay={1}
-              color={isDark ? "#c9c6c6ff" : "black"}
+              color={isDark ? "#c9c6c6ff" : "purple"}
               shineColor="pink"
               spread={120}
               direction="left"
@@ -75,7 +75,7 @@ const Home = ({ isDark }) => {
               text="I am a developer"
               speed={2}
               delay={2}
-              color={isDark ? "#c9c6c6ff" : "black"}
+              color={isDark ? "#c9c6c6ff" : "purple"}
               shineColor="pink"
               spread={120}
               direction="left"

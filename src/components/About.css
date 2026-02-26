@@ -245,6 +245,41 @@
 
 /* Links and tooltips */
 
+.btn-github,
+.btn-linkedin {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.12s ease, background-color 0.2s ease;
+}
+
+.btn-github {
+  background: #2ea44f;
+  box-shadow: 0 6px 18px rgba(46, 164, 79, 0.18);
+}
+
+.btn-github:hover {
+  background: #2c974b;
+  transform: translateY(-2px);
+}
+
+.btn-linkedin {
+  background: #0077b5;
+  box-shadow: 0 6px 18px rgba(0, 119, 181, 0.18);
+}
+
+.btn-linkedin:hover {
+  background: #006da5;
+  transform: translateY(-2px);
+}
+
 .about .leetcode,
 .about .geeks {
   position: relative;

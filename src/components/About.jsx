@@ -47,9 +47,7 @@ const About = ({ isDark = true }) => {
         <div className="details">
           <h1>About Me</h1>
           <p>
-            I am a final-year Computer Science student with strong skills in
-            competitive programming and full-stack web development. I regularly
-            solve algorithmic problems on platforms like{" "}
+            I am a final-year Computer Science student, passionate Full-Stack & Backend Developer who loves building intelligent, real-world web applications. My expertise lies in designing scalable REST APIs and deploying AI-integrated platforms. I regularly solve algorithmic problems on platforms like{" "}
             <a
               className="leetcode"
               href="https://leetcode.com/u/aryan8434/"
@@ -70,7 +68,7 @@ const About = ({ isDark = true }) => {
               aria-label="Visit GeeksForGeeks"
             >
               GeeksForGeeks
-            </a>
+            </a>.
           </p>
 
           <div className="about-actions">
@@ -81,6 +79,24 @@ const About = ({ isDark = true }) => {
             >
               View Resume
             </button>
+            <a
+              href="https://github.com/aryan8434"
+              className="btn-github"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit GitHub"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/aryan-kumar-raj-988587b3/"
+              className="btn-linkedin"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit LinkedIn"
+            >
+              LinkedIn
+            </a>
           </div>
           {showResume && (
             <div

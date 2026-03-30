@@ -5,7 +5,7 @@ const placeholders = [
   {
     title: "Travo AI",
     desc: "Book your entire trip and resolve travel distress in minutes with simple text commands.",
-    url: "http://65.1.131.213:5000/",
+    url: "https://travoai.me/",
     image: "/travo.png",
   },
   {
@@ -14,7 +14,13 @@ const placeholders = [
     url: "https://shopper-ai-lake.vercel.app/",
     image: "/shopper.png",
   },
-  
+  {
+    title: "LedgerLens AI",
+    desc: "Create demo invoices, store them in MongoDB, and use Groq LLM checks to simplify ERM workflows.",
+    url: "https://fde-sigma.vercel.app/",
+    image: "/ledgerlens.png",
+  },
+
   {
     title: "Multidoc Querying System",
     desc: "Ask one question. Get answers from all your documents.",

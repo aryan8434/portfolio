@@ -27,6 +27,12 @@ const placeholders = [
     url: "http://localhost:5174/",
     image: "/multi.png",
   },
+  {
+    title: "LeetLens",
+    desc: "A project which analyzes Leetcode for MAANG and generates AI reports.",
+    url: "https://leetlens.tech",
+    image: "/leetlens.png",
+  },
 ];
 
 const Projects = ({ isDark }) => {

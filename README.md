@@ -36,51 +36,55 @@
 
 ## ✨ Features
 
-| Feature | Description |
-|---|---|
-| 🧊 **3D Animated Avatar** | Interactive GLB model — rotate, zoom & explore with orbit controls |
-| 🌐 **Dot Grid Background** | Canvas particle system that reacts to mouse movement and clicks |
-| 🤖 **AI Chatbot** | Groq-powered assistant for real-time conversations |
-| 🌗 **Dark / Light Mode** | One-click seamless theme switching with smooth transitions |
-| 📬 **Contact Form** | EmailJS-powered form — sends messages directly to inbox |
-| ✨ **Shiny Text Effects** | Dynamic shimmer animations on headings |
-| 🎞️ **GSAP Animations** | Professional scroll & entrance animations |
-| 🖱️ **Custom Cursor** | Unique animated cursor that follows mouse movement |
-| 📱 **Fully Responsive** | Optimized layout across all screen sizes |
+| Feature                    | Description                                                        |
+| -------------------------- | ------------------------------------------------------------------ |
+| 🧊 **3D Animated Avatar**  | Interactive GLB model — rotate, zoom & explore with orbit controls |
+| 🌐 **Dot Grid Background** | Canvas particle system that reacts to mouse movement and clicks    |
+| 🤖 **AI Chatbot**          | Groq-powered assistant for real-time conversations                 |
+| 🌗 **Dark / Light Mode**   | One-click seamless theme switching with smooth transitions         |
+| 📬 **Contact Form**        | EmailJS-powered form — sends messages directly to inbox            |
+| ✨ **Shiny Text Effects**  | Dynamic shimmer animations on headings                             |
+| 🎞️ **GSAP Animations**     | Professional scroll & entrance animations                          |
+| 🖱️ **Custom Cursor**       | Unique animated cursor that follows mouse movement                 |
+| 📱 **Fully Responsive**    | Optimized layout across all screen sizes                           |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### ⚛️ Core
-| Technology | Version | Role |
-|---|---|---|
-| **React** | 19 | UI framework with latest hooks & features |
-| **Vite** | 7 | Lightning-fast dev server & build tool |
-| **JavaScript ES6+** | — | Modern syntax, async/await, destructuring |
+
+| Technology          | Version | Role                                      |
+| ------------------- | ------- | ----------------------------------------- |
+| **React**           | 19      | UI framework with latest hooks & features |
+| **Vite**            | 7       | Lightning-fast dev server & build tool    |
+| **JavaScript ES6+** | —       | Modern syntax, async/await, destructuring |
 
 ### 🗺️ 3D & Animation
-| Technology | Version | Role |
-|---|---|---|
-| **Three.js** | 0.182 | WebGL 3D rendering engine |
-| **@react-three/fiber** | 9 | React renderer for Three.js |
-| **@react-three/drei** | 10 | Orbit controls, loaders & helpers |
-| **GSAP** | 3.14 | Professional-grade scroll animations |
-| **Motion** | 12 | Declarative React animations |
+
+| Technology             | Version | Role                                 |
+| ---------------------- | ------- | ------------------------------------ |
+| **Three.js**           | 0.182   | WebGL 3D rendering engine            |
+| **@react-three/fiber** | 9       | React renderer for Three.js          |
+| **@react-three/drei**  | 10      | Orbit controls, loaders & helpers    |
+| **GSAP**               | 3.14    | Professional-grade scroll animations |
+| **Motion**             | 12      | Declarative React animations         |
 
 ### 🎨 Styling
-| Technology | Version | Role |
-|---|---|---|
-| **Tailwind CSS** | 3 | Utility-first styling |
-| **Custom CSS** | — | Component-scoped styles & keyframes |
-| **PostCSS + Autoprefixer** | — | CSS processing pipeline |
+
+| Technology                 | Version | Role                                |
+| -------------------------- | ------- | ----------------------------------- |
+| **Tailwind CSS**           | 3       | Utility-first styling               |
+| **Custom CSS**             | —       | Component-scoped styles & keyframes |
+| **PostCSS + Autoprefixer** | —       | CSS processing pipeline             |
 
 ### 📡 Services
-| Technology | Version | Role |
-|---|---|---|
-| **Groq SDK** | 0.3 | AI chatbot (Llama model) |
-| **EmailJS** | 4 | Client-side contact form email delivery |
-| **Firebase** | 12 | Backend services |
+
+| Technology   | Version | Role                                    |
+| ------------ | ------- | --------------------------------------- |
+| **Groq SDK** | 0.3     | AI chatbot (Llama model)                |
+| **EmailJS**  | 4       | Client-side contact form email delivery |
+| **Firebase** | 12      | Backend services                        |
 
 ---
 
@@ -138,18 +142,21 @@ VITE_EMAILJS_TEMPLATE_ID=your_template_id
 VITE_EMAILJS_PUBLIC_KEY=your_public_key
 VITE_GROQ_API_KEY=your_groq_api_key
 VITE_FIREBASE_API_KEY=your_firebase_key
+VITE_ADMIN_PANEL_KEY=your_admin_key
 ```
+
+Open the admin dashboard by visiting `/#admin` after setting the admin key.
 
 ---
 
 ## 🌐 Browser Support
 
-| Browser | Supported |
-|---|---|
-| Chrome (latest) | ✅ |
-| Firefox (latest) | ✅ |
-| Safari (latest) | ✅ |
-| Edge (latest) | ✅ |
+| Browser          | Supported |
+| ---------------- | --------- |
+| Chrome (latest)  | ✅        |
+| Firefox (latest) | ✅        |
+| Safari (latest)  | ✅        |
+| Edge (latest)    | ✅        |
 
 > ⚠️ Requires a browser with **WebGL support** for the 3D avatar.
 

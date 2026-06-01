@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./index.css";
 import Navbar from "./components/Navbar.jsx";
 import "./components/Navbar.css";
@@ -11,24 +11,20 @@ import Contact from "./components/Contact.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
 import Home from "./components/Home.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import { logPortfolioVisit } from "./services/visitLogger.js";
 
 function RootApp() {
   const containerRef = useRef(null);
-  // Default to dark mode on initial render to avoid flicker
+  const darkVideoRef = useRef(null);
+  const lightVideoRef = useRef(null);
   const [isDark, setIsDark] = useState(true);
 
-  // Listen for theme changes (fired from Navbar toggle)
   useEffect(() => {
     const handler = (e) => setIsDark(Boolean(e?.detail?.isDark));
     window.addEventListener("themeChange", handler);
     return () => window.removeEventListener("themeChange", handler);
   }, []);
 
-  // Refs to background videos so we can call play() when needed (some browsers block autoplay without an explicit play call)
-  const darkVideoRef = useRef(null);
-  const lightVideoRef = useRef(null);
-
-  // Try to start videos on mount and when theme changes
   useEffect(() => {
     let mounted = true;
     const tryPlay = async () => {
@@ -37,25 +33,47 @@ function RootApp() {
         if (darkVideoRef.current && darkVideoRef.current.paused) {
           await darkVideoRef.current.play().catch(() => {});
         }
-      } catch (e) {
+      } catch {
         /* ignore */
       }
       try {
         if (lightVideoRef.current && lightVideoRef.current.paused) {
           await lightVideoRef.current.play().catch(() => {});
         }
-      } catch (e) {
+      } catch {
         /* ignore */
       }
     };
+
     tryPlay();
-    // Also attempt a delayed play in case loading takes longer
-    const t = setTimeout(tryPlay, 800);
+    const timer = setTimeout(tryPlay, 800);
+
     return () => {
       mounted = false;
-      clearTimeout(t);
+      clearTimeout(timer);
     };
   }, [isDark]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let cancelled = false;
+
+    const recordVisit = async () => {
+      try {
+        await logPortfolioVisit();
+        if (cancelled) return;
+      } catch (error) {
+        console.error("Failed to log portfolio visit:", error);
+      }
+    };
+
+    recordVisit();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <ErrorBoundary>
@@ -71,7 +89,6 @@ function RootApp() {
         }}
       >
         <CustomCursor />
-        {/* Dot Grid Background */}
         <div
           style={{
             width: "100%",
@@ -80,7 +97,6 @@ function RootApp() {
             top: 0,
             left: 0,
             zIndex: -2,
-            // White page background in light mode so black dots are visible
             background: isDark ? "transparent" : "#ffffff",
             transition: "background 360ms ease",
           }}
@@ -102,14 +118,12 @@ function RootApp() {
 
         <Navbar />
 
-        {/* Page 1: Home (Avatar + Hello) */}
         <section
           id="home"
           className="home-section"
           style={{ scrollSnapAlign: "start" }}
         >
           <div className="home-bg-overlay" />
-
           <div
             className="chat-container-wrapper"
             style={{ width: "100%", flexDirection: "column" }}
@@ -129,7 +143,6 @@ function RootApp() {
           </div>
         </section>
 
-        {/* Page 2: About (Navbar + About content only) */}
         <section
           id="about-page"
           style={{
@@ -159,7 +172,6 @@ function RootApp() {
           </div>
         </section>
 
-        {/* Page 3: Projects */}
         <section
           id="projects"
           style={{
@@ -188,7 +200,6 @@ function RootApp() {
           </div>
         </section>
 
-        {/* Page 4: Contact */}
         <section
           id="contact"
           style={{
@@ -203,7 +214,6 @@ function RootApp() {
             scrollSnapAlign: "start",
           }}
         >
-          {/* Opaque overlay removed to let DotGrid show through */}
           <div
             style={{
               position: "relative",

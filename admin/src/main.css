@@ -1,0 +1,23 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    "Helvetica Neue",
+    Arial;
+  margin: 0;
+  background: #f7fafc;
+  color: #0f172a;
+}
+
+table th {
+  background: #eef2ff;
+}

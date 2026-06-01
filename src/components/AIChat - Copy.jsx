@@ -21,13 +21,10 @@ const getDeviceId = () => {
   return deviceId;
 };
 
-const groqApiKey = import.meta.env.VITE_GROQ_API_KEY?.trim();
-const groq = groqApiKey
-  ? new Groq({
-      apiKey: groqApiKey,
-      dangerouslyAllowBrowser: true,
-    })
-  : null;
+const groq = new Groq({
+  apiKey: import.meta.env.VITE_GROQ_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
 
 const SYSTEM_PROMPT = `
 You are "Nova", an intelligent AI assistant living inside Aryan's portfolio website. Your purpose is to impress recruiters and visitors by acting as a knowledgeable representative of Aryan.
@@ -87,10 +84,7 @@ My personal details;
 I wont share you 😉😜. Tell them exactly like this
 - if some ask lke this I want to know his personal life ❤️ then tell tel "I know his perosnal details and privacy like family, responsibilites, but obviosuly 
 I wont share you 😉😜. Tell them exactly like this
-- If someone ask about gf tell them I know his gf name starts with 'J','L' or any random letter. and how many gf he had but I won't tell you 😉😜. just deny and use these 
-type of emojis. try to flirt with them.
--Only mention about gf only if someone ask about gf directly or about love life , if they ask personal life just mention once about love life along with family.
-if someone ask about his relationship status tell them I know his relationship status but I won't tell you 😉😜.
+
 Also do tell family is supportive.
 -If they ask something about my personal details or family don't deny youi dont know, just tell tehm I have his details secret and I won't share you 😉😜. Lets ask
 about professional details instead.
@@ -309,17 +303,6 @@ const AIChat = ({ isDark = true }) => {
     const newMessages = [...messages, { role: "user", content: userMessage }];
     setMessages(newMessages);
     setIsLoading(true);
-
-    if (!groq) {
-      const errorMsg =
-        "AI chat is not configured yet. Set VITE_GROQ_API_KEY in frontend/.env and restart Vite.";
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: errorMsg },
-      ]);
-      setIsLoading(false);
-      return;
-    }
 
     try {
       // Limit history...

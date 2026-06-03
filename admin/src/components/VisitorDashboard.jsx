@@ -31,7 +31,9 @@ export default function VisitorDashboard() {
         });
 
         if (!response.ok) {
-          const message = await response.text().catch(() => "Failed to load visitor records.");
+          const message = await response
+            .text()
+            .catch(() => "Failed to load visitor records.");
           throw new Error(message || "Failed to load visitor records.");
         }
 
@@ -47,7 +49,7 @@ export default function VisitorDashboard() {
           isNetworkError
             ? "Local visitor API is not running. Put your service-account JSON in admin/service-account.json, then run npm run dev inside admin to start both the API and the dashboard."
             : snapshotError?.message ||
-              "Failed to load visitor records from the local API.",
+                "Failed to load visitor records from the local API.",
         );
         setLoading(false);
       }

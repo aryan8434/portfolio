@@ -71,7 +71,9 @@ export const logPortfolioVisit = async () => {
       latitude: location.latitude,
       longitude: location.longitude,
       pagePath:
-        window.location.pathname + window.location.search + window.location.hash,
+        window.location.pathname +
+        window.location.search +
+        window.location.hash,
       referrer: document.referrer || "direct",
       userAgent: navigator.userAgent,
       screenSize: `${window.screen.width}x${window.screen.height}`,

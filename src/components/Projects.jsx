@@ -3,6 +3,12 @@ import "./Projects.css";
 
 const placeholders = [
   {
+    title: "Startup Navigator",
+    desc: "A guided discovery tool for finding the right startup resources, ideas, and next steps.",
+    url: "https://startup-navigator-taupe.vercel.app/",
+    image: "/startup-navigator.svg",
+  },
+  {
     title: "Travo AI",
     desc: "Book your entire trip and resolve travel distress in minutes with simple text commands.",
     url: "https://travoai.me/",

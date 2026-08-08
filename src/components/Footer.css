@@ -1,0 +1,127 @@
+.footer {
+  position: relative;
+  padding: 42px 0 34px;
+  border-top: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer__mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.footer__brand strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.footer__brand span {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: var(--text-mute);
+}
+
+.footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.footer__links a {
+  position: relative;
+  font-size: 0.86rem;
+  color: var(--text-soft);
+  transition: color 260ms ease;
+}
+
+.footer__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 1px;
+  background: var(--accent-gradient);
+  transition: width 300ms var(--ease-out);
+}
+
+.footer__links a:hover {
+  color: var(--text);
+}
+
+.footer__links a:hover::after {
+  width: 100%;
+}
+
+.footer__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 0.78rem;
+  color: var(--text-mute);
+}
+
+.footer__top {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  transition:
+    transform 300ms var(--ease-spring),
+    color 260ms ease,
+    border-color 260ms ease;
+}
+
+.footer__top:hover {
+  transform: translateY(-2px);
+  color: var(--text);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+@media (max-width: 720px) {
+  .footer__inner {
+    justify-content: center;
+    text-align: center;
+  }
+  .footer__links {
+    justify-content: center;
+    width: 100%;
+  }
+  .footer__meta {
+    width: 100%;
+    justify-content: center;
+  }
+}

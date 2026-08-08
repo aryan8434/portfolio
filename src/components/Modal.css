@@ -1,0 +1,229 @@
+.modal {
+  --modal-exit: 320ms;
+
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: 4vh 3vw;
+  background: rgba(6, 4, 14, 0.72);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  animation: modalVeilIn 380ms var(--ease-out) both;
+}
+
+.modal.is-closing {
+  animation: modalVeilOut var(--modal-exit) var(--ease-out) both;
+  pointer-events: none;
+}
+
+.modal__panel {
+  position: relative;
+  width: min(1000px, 100%);
+  height: min(88vh, 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--bg-elev);
+  border: 1px solid var(--hairline-strong);
+  box-shadow:
+    0 50px 120px -30px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(139, 92, 246, 0.14);
+  animation: modalIn 520ms var(--ease-spring) both;
+}
+
+.modal.is-closing .modal__panel {
+  animation: modalOut var(--modal-exit) var(--ease-out) both;
+}
+
+/* Gradient hairline along the top edge */
+.modal__panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-gradient);
+  z-index: 3;
+}
+
+/* ---------- red close button ---------- */
+
+.modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(140deg, #f43f5e, #dc2626);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 26px -8px rgba(244, 63, 94, 0.8);
+  transition:
+    transform 380ms var(--ease-spring),
+    box-shadow 320ms var(--ease-out),
+    background 320ms var(--ease-out);
+  animation: closePop 620ms var(--ease-spring) 180ms both;
+}
+
+.modal__close:hover {
+  transform: rotate(90deg) scale(1.12);
+  background: linear-gradient(140deg, #fb7185, #ef4444);
+  box-shadow: 0 14px 34px -8px rgba(244, 63, 94, 1);
+}
+
+.modal__close:active {
+  transform: rotate(90deg) scale(0.94);
+}
+
+/* Halo pulse so the exit affordance reads immediately */
+.modal__close::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(244, 63, 94, 0.55);
+  animation: closeHalo 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ---------- chrome ---------- */
+
+.modal__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 68px 17px 22px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface);
+}
+
+.modal__heading strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.modal__heading span {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.79rem;
+  color: var(--text-mute);
+}
+
+.modal__download {
+  flex-shrink: 0;
+}
+
+.modal__viewport {
+  flex: 1;
+  min-height: 0;
+  background: #f1f1f5;
+}
+
+.modal__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* ---------- animation ---------- */
+
+@keyframes modalVeilIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalVeilOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modalIn {
+  0% {
+    opacity: 0;
+    transform: translateY(38px) scale(0.9);
+    filter: blur(10px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes modalOut {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.93);
+    filter: blur(6px);
+  }
+}
+
+@keyframes closePop {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-120deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes closeHalo {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal {
+    padding: 2vh 2vw;
+  }
+  .modal__panel {
+    height: 94vh;
+  }
+  .modal__bar {
+    padding: 15px 62px 15px 16px;
+  }
+  .modal__download span {
+    display: none;
+  }
+}

@@ -15,13 +15,45 @@ const getVisitorIp = async () => {
   }
 };
 
-const getBrowserLocation = () =>
+/** Stable per-tab id so repeat pageviews in one sitting can be grouped. */
+const getSessionId = () => {
+  try {
+    let id = sessionStorage.getItem("visit_session");
+    if (!id) {
+      id = crypto.randomUUID();
+      sessionStorage.setItem("visit_session", id);
+    }
+    return id;
+  } catch {
+    return null;
+  }
+};
+
+const getCampaign = () => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const parts = ["utm_source", "utm_medium", "utm_campaign"]
+      .map((key) => params.get(key))
+      .filter(Boolean);
+    return parts.length ? parts.join(" / ") : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Precise location needs the visitor to accept a browser prompt, which can
+ * take a while or never happen. Resolved separately so the pageview itself
+ * is never held hostage to it.
+ */
+const requestPreciseLocation = () =>
   new Promise((resolve) => {
     if (!navigator.geolocation) {
       resolve({
         latitude: null,
         longitude: null,
-        locationId: "location denied",
+        accuracy: null,
+        locationId: "location unavailable",
         locationStatus: "unavailable",
       });
       return;
@@ -29,10 +61,12 @@ const getBrowserLocation = () =>
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
         resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          locationId: `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`,
+          latitude,
+          longitude,
+          accuracy: accuracy ?? null,
+          locationId: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`,
           locationStatus: "granted",
         });
       },
@@ -41,35 +75,24 @@ const getBrowserLocation = () =>
         resolve({
           latitude: null,
           longitude: null,
+          accuracy: null,
           locationId: denied ? "location denied" : "location unavailable",
           locationStatus: denied ? "denied" : "unavailable",
         });
       },
-      {
-        enableHighAccuracy: false,
-        timeout: 7000,
-        maximumAge: 300000,
-      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
     );
   });
 
 export const logPortfolioVisit = async () => {
-  const [ipAddress, location] = await Promise.all([
-    getVisitorIp(),
-    getBrowserLocation(),
-  ]);
+  const ipAddress = await getVisitorIp();
 
   const response = await fetch(`${VISIT_API_URL}/api/visit`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       ipAddress,
-      locationId: location.locationId,
-      locationStatus: location.locationStatus,
-      latitude: location.latitude,
-      longitude: location.longitude,
+      locationStatus: "pending",
       pagePath:
         window.location.pathname +
         window.location.search +
@@ -77,6 +100,10 @@ export const logPortfolioVisit = async () => {
       referrer: document.referrer || "direct",
       userAgent: navigator.userAgent,
       screenSize: `${window.screen.width}x${window.screen.height}`,
+      language: navigator.language || null,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+      campaign: getCampaign(),
+      sessionId: getSessionId(),
     }),
   });
 
@@ -85,5 +112,22 @@ export const logPortfolioVisit = async () => {
     throw new Error(message || "Failed to log visit.");
   }
 
-  return response.json().catch(() => null);
+  const result = await response.json().catch(() => null);
+
+  // Ask for precise coordinates in the background and patch the record.
+  if (result?.id) {
+    requestPreciseLocation()
+      .then((location) =>
+        fetch(`${VISIT_API_URL}/api/visit/${result.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(location),
+        }),
+      )
+      .catch(() => {
+        /* precise location is a bonus, never a failure */
+      });
+  }
+
+  return result;
 };

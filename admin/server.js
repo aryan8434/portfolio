@@ -3,6 +3,7 @@ import express from "express";
 import fs from "node:fs";
 import path from "node:path";
 import admin from "firebase-admin";
+import { lookupIp, parseUserAgent, describeReferrer } from "./lib/enrich.js";
 
 const localCredentialCandidates = [
   process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -49,26 +50,94 @@ app.post("/api/visit", async (request, response) => {
         ? forwardedFor.split(",")[0].trim()
         : request.ip;
 
-    await db.collection("portfolio_visits").add({
-      ipAddress: body.ipAddress || requestIp || "unknown",
+    const ipAddress = body.ipAddress || requestIp || "unknown";
+    const userAgent = body.userAgent || request.get("user-agent") || "unknown";
+
+    // Resolve the IP into a place and a network owner. Never let a slow or
+    // failing lookup cost us the visit record itself.
+    const geo = await lookupIp(ipAddress).catch(() => ({}));
+    const client = parseUserAgent(userAgent);
+
+    const doc = await db.collection("portfolio_visits").add({
+      ipAddress,
+      userAgent,
+
+      // IP-derived location + network
+      city: geo.city ?? null,
+      region: geo.region ?? null,
+      country: geo.country ?? null,
+      countryCode: geo.countryCode ?? null,
+      flag: geo.flag ?? null,
+      ipLatitude: geo.ipLatitude ?? null,
+      ipLongitude: geo.ipLongitude ?? null,
+      ipTimezone: geo.ipTimezone ?? null,
+      isp: geo.isp ?? null,
+      org: geo.org ?? null,
+      asn: geo.asn ?? null,
+      networkType: geo.networkType ?? "unknown",
+      geoSource: geo.geoSource ?? "none",
+
+      // Precise browser location — only present when the visitor allowed it
       locationId: body.locationId || "location unavailable",
-      locationStatus: body.locationStatus || "unavailable",
+      locationStatus: body.locationStatus || "pending",
       latitude: body.latitude ?? null,
       longitude: body.longitude ?? null,
+      accuracy: body.accuracy ?? null,
+
+      // Client
+      browser: client.browser,
+      os: client.os,
+      device: client.device,
+      isBot: client.isBot,
+      language: body.language || null,
+      timezone: body.timezone || null,
+      screenSize: body.screenSize || "unknown",
+
+      // Acquisition
       pagePath: body.pagePath || "/",
       referrer: body.referrer || "direct",
-      userAgent: body.userAgent || request.get("user-agent") || "unknown",
-      screenSize: body.screenSize || "unknown",
+      referrerLabel: describeReferrer(body.referrer),
+      campaign: body.campaign || null,
+      sessionId: body.sessionId || null,
+
       source: "portfolio",
       visitedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    response.json({ ok: true });
+    response.json({ ok: true, id: doc.id });
   } catch (error) {
     console.error("Failed to store visit:", error);
     response.status(500).json({
       ok: false,
       error: error?.message || "Failed to store visit",
+    });
+  }
+});
+
+/**
+ * Precise location arrives later than the pageview — the browser only hands
+ * over coordinates after the visitor accepts the permission prompt, so the
+ * visit is recorded first and patched here if and when they allow it.
+ */
+app.patch("/api/visit/:id", async (request, response) => {
+  try {
+    const body = request.body || {};
+    const update = {
+      locationStatus: body.locationStatus || "unavailable",
+      locationId: body.locationId || "location unavailable",
+      latitude: body.latitude ?? null,
+      longitude: body.longitude ?? null,
+      accuracy: body.accuracy ?? null,
+      locationResolvedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    await db.collection("portfolio_visits").doc(request.params.id).update(update);
+    response.json({ ok: true });
+  } catch (error) {
+    console.error("Failed to update visit location:", error);
+    response.status(500).json({
+      ok: false,
+      error: error?.message || "Failed to update visit location",
     });
   }
 });

@@ -1,73 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import "./Navbar.css";
+
+const LINKS = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Work" },
+  { id: "contact", label: "Contact" },
+];
 
 const Navbar = () => {
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
+  // index.html applies the saved theme before first paint, so the class on
+  // <html> is already the source of truth by the time React mounts.
+  const [isDark, setIsDark] = useState(
+    () =>
+      typeof document === "undefined" ||
+      document.documentElement.classList.contains("dark"),
+  );
+  const [active, setActive] = useState("home");
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    // Compute header height dynamically (handles responsive / different heights)
-    const header = document.querySelector("header");
-    const headerHeight = header ? header.offsetHeight : 0;
-
-    // The app renders sections inside the root container (overflowY: 'auto'), so scroll that container
-    const root = document.getElementById("root");
-    const scrollContainer =
-      (root && root.firstElementChild) ||
-      document.scrollingElement ||
-      document.documentElement;
-
-    // Compute target top relative to the scroll container
-    let targetTop = Math.max(0, el.offsetTop - headerHeight);
-
-    // Add an extra 10% of the viewport height to ensure the section is fully visible
-    const extra = Math.round(window.innerHeight * 0.1);
-    targetTop += extra;
-
-    // Cap to max scrollable position
-    const maxTop =
-      (scrollContainer &&
-        scrollContainer.scrollHeight -
-          (scrollContainer.clientHeight || window.innerHeight)) ||
-      0;
-    if (targetTop > maxTop) targetTop = maxTop;
-
-    // Smoothly scroll the container
-    if (scrollContainer && typeof scrollContainer.scrollTo === "function") {
-      scrollContainer.scrollTo({ top: targetTop, behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: targetTop, behavior: "smooth" });
-    }
-  };
-
-  // Default UI to dark mode to ensure dark styling on first load
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  /* ---------- theme ---------- */
+  const applyTheme = useCallback((dark) => {
+    document.documentElement.classList.toggle("dark", dark);
+    document.documentElement.classList.toggle("light", !dark);
     try {
-      const saved = localStorage.getItem("theme");
-      if (saved) {
-        const dark = saved === "dark";
-        setIsDark(dark);
-        document.documentElement.classList.toggle("dark", dark);
-        // Notify other parts of the app about initial theme
-        try {
-          window.dispatchEvent(
-            new CustomEvent("themeChange", { detail: { isDark: dark } }),
-          );
-        } catch (err) {}
-      } else {
-        // No saved preference: default to dark on first visit
-        const dark = true;
-        setIsDark(dark);
-        document.documentElement.classList.toggle("dark", dark);
-        try {
-          window.dispatchEvent(
-            new CustomEvent("themeChange", { detail: { isDark: dark } }),
-          );
-        } catch (err) {}
-      }
-    } catch (e) {
+      window.dispatchEvent(
+        new CustomEvent("themeChange", { detail: { isDark: dark } }),
+      );
+    } catch {
       /* ignore */
     }
   }, []);
@@ -75,117 +37,120 @@ const Navbar = () => {
   const toggleTheme = () => {
     const next = !isDark;
     setIsDark(next);
-    document.documentElement.classList.toggle("dark", next);
+    applyTheme(next);
     try {
       localStorage.setItem("theme", next ? "dark" : "light");
-      // Notify other parts of the app about theme change
-      try {
-        window.dispatchEvent(
-          new CustomEvent("themeChange", { detail: { isDark: next } }),
-        );
-      } catch (err) {}
-    } catch (e) {}
+    } catch {
+      /* ignore */
+    }
   };
 
-  return (
-    <header className="navbar-header">
-      <nav>
-        <ul className="navbar-list">
-          <li
-            style={{
-              cursor: "pointer",
-              fontFamily:
-                "'moogalator-font','Baby Gemoy', 'Fredoka One', cursive",
-            }}
-            onClick={() => {
-              scrollTo("home");
-              try {
-                window.dispatchEvent(new CustomEvent("homeClicked"));
-              } catch {}
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                scrollTo("home");
-                try {
-                  window.dispatchEvent(new CustomEvent("homeClicked"));
-                } catch {}
-              }
-            }}
-          >
-            Home
-          </li>
-          <li
-            style={{
-              cursor: "pointer",
-              fontFamily: "'Baby Gemoy', 'Fredoka One', cursive",
-            }}
-            onClick={() => scrollTo("about-page")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") scrollTo("about-page");
-            }}
-          >
-            About
-          </li>
-          <li
-            style={{
-              cursor: "pointer",
-              fontFamily: "'Baby Gemoy', 'Fredoka One', cursive",
-            }}
-            onClick={() => scrollTo("projects")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") scrollTo("projects");
-            }}
-          >
-            My Projects
-          </li>
+  /* ---------- active section + condensed nav on scroll ---------- */
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
 
-          <li
-            style={{
-              cursor: "pointer",
-              fontFamily: "'Baby Gemoy', 'Fredoka One', cursive",
-            }}
-            onClick={() => scrollTo("contact")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") scrollTo("contact");
+      const line = window.innerHeight * 0.35;
+      let current = LINKS[0].id;
+      for (const link of LINKS) {
+        const el = document.getElementById(link.id);
+        if (el && el.getBoundingClientRect().top <= line) current = link.id;
+      }
+      setActive(current);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollTo = useCallback((id) => {
+    setMenuOpen(false);
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 70;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    if (id === "home") {
+      try {
+        window.dispatchEvent(new CustomEvent("homeClicked"));
+      } catch {
+        /* ignore */
+      }
+    }
+  }, []);
+
+  return (
+    <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
+      <div className="nav__inner">
+        <button
+          className="nav__brand"
+          onClick={() => scrollTo("home")}
+          aria-label="Back to top"
+        >
+          <span className="nav__mark">AR</span>
+          <span className="nav__wordmark">
+            Aryan<span className="nav__dot">.</span>
+          </span>
+        </button>
+
+        <nav className="nav__rail" aria-label="Sections">
+          {LINKS.map((link) => (
+            <button
+              key={link.id}
+              className={`nav__link ${active === link.id ? "is-active" : ""}`}
+              onClick={() => scrollTo(link.id)}
+              aria-current={active === link.id ? "true" : undefined}
+            >
+              {link.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="nav__actions">
+          <button
+            onClick={toggleTheme}
+            className="nav__theme"
+            aria-pressed={isDark}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            title={isDark ? "Light mode" : "Dark mode"}
+          >
+            <span className="nav__theme-icon">{isDark ? "☾" : "☀"}</span>
+          </button>
+
+          <a
+            className="btn btn-primary btn-sm nav__cta"
+            href="#contact"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo("contact");
             }}
           >
-            Contact Me
-          </li>
-          <li>
-            <button
-              onClick={toggleTheme}
-              aria-pressed={isDark}
-              aria-label={
-                isDark ? "Switch to light mode" : "Switch to dark mode"
-              }
-              data-tooltip={isDark ? "Enable Light mode" : "Enable Dark mode"}
-              className="theme-btn"
-              style={{
-                background: "transparent",
-                border: "1px solid rgba(255,255,255,0.08)",
-                padding: "6px 10px",
-                borderRadius: 8,
-                cursor: "pointer",
-                color: "#fff",
-                fontSize: 16,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              {isDark ? "🌙" : "☀️"}
-            </button>
-          </li>
-        </ul>
-      </nav>
+            Let's talk
+          </a>
+
+          <button
+            className={`nav__burger ${menuOpen ? "is-open" : ""}`}
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-label="Toggle menu"
+          >
+            <span />
+            <span />
+          </button>
+        </div>
+      </div>
+
+      <div className={`nav__sheet ${menuOpen ? "is-open" : ""}`}>
+        {LINKS.map((link) => (
+          <button
+            key={link.id}
+            className={`nav__sheet-link ${active === link.id ? "is-active" : ""}`}
+            onClick={() => scrollTo(link.id)}
+          >
+            {link.label}
+          </button>
+        ))}
+      </div>
     </header>
   );
 };

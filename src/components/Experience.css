@@ -1,0 +1,321 @@
+.experience {
+  width: 100%;
+}
+
+/* ---------- timeline ---------- */
+
+.xp {
+  list-style: none;
+  padding: 0;
+  position: relative;
+}
+
+.xp::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    var(--violet),
+    var(--fuchsia) 45%,
+    var(--cyan) 75%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+.xp__item {
+  position: relative;
+  padding-left: 38px;
+  padding-bottom: 22px;
+}
+
+.xp__item:last-child {
+  padding-bottom: 0;
+}
+
+.xp__marker {
+  position: absolute;
+  left: 0;
+  top: 26px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--violet);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--violet) 12%, transparent);
+  transition: box-shadow 340ms var(--ease-out);
+  z-index: 1;
+}
+
+.xp__marker.is-current {
+  border-color: var(--mint);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint) 16%, transparent);
+}
+
+.xp__marker.is-current::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--mint);
+  animation: pulseRing 2.2s ease-out infinite;
+}
+
+.xp__item:hover .xp__marker {
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--violet) 18%, transparent);
+}
+
+/* ---------- card ---------- */
+
+.xp__card {
+  padding: 24px 26px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  transition:
+    transform 420ms var(--ease-out),
+    border-color 420ms var(--ease-out),
+    box-shadow 420ms var(--ease-out);
+}
+
+.xp__card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139, 92, 246, 0.42);
+  box-shadow: var(--shadow-glow);
+}
+
+.xp__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.xp__period {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  color: var(--text-mute);
+  margin-bottom: 9px;
+}
+
+.xp__role {
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.xp__org {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--violet) 74%, var(--text));
+}
+
+.xp__org em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-mute);
+}
+
+.xp__now {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--mint);
+  background: color-mix(in srgb, var(--mint) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mint) 38%, transparent);
+}
+
+.xp__summary {
+  margin-top: 15px;
+  font-size: 0.97rem;
+  line-height: 1.68;
+  color: var(--text);
+  font-weight: 450;
+}
+
+.xp__points {
+  margin: 15px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.xp__points li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.905rem;
+  line-height: 1.66;
+  color: var(--text-soft);
+}
+
+.xp__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--accent-gradient);
+  transform: rotate(45deg);
+}
+
+.xp__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.xp__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.xp__cert {
+  flex-shrink: 0;
+}
+
+/* ---------- certificate wall ---------- */
+
+.certs {
+  margin-top: clamp(46px, 7vw, 70px);
+}
+
+.certs__title {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  padding-bottom: 16px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.certs__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 15px;
+}
+
+.certcard {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 20px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 380ms var(--ease-spring),
+    border-color 320ms var(--ease-out),
+    box-shadow 380ms var(--ease-out);
+}
+
+.certcard:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--from) 55%, transparent);
+  box-shadow: var(--shadow-glow);
+}
+
+.certcard__seal {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: linear-gradient(140deg, var(--from), var(--to));
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--from) 85%, transparent);
+  transition: transform 460ms var(--ease-spring);
+}
+
+.certcard:hover .certcard__seal {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.certcard__text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.certcard__text strong {
+  font-family: var(--font-display);
+  font-size: 0.97rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.certcard__text em {
+  font-style: normal;
+  margin-top: 3px;
+  font-size: 0.77rem;
+  color: var(--text-mute);
+}
+
+.certcard__cue {
+  flex-shrink: 0;
+  font-size: 0.79rem;
+  font-weight: 500;
+  color: var(--text-mute);
+  transition:
+    color 300ms ease,
+    transform 380ms var(--ease-spring);
+}
+
+.certcard:hover .certcard__cue {
+  color: var(--text);
+  transform: translateX(3px);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 620px) {
+  .xp__item {
+    padding-left: 28px;
+  }
+  .xp__card {
+    padding: 20px;
+  }
+  .xp__head {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .xp__foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

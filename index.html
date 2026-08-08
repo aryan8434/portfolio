@@ -5,13 +5,47 @@
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="apple-touch-icon" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#08070f" />
+
+    <title>Aryan Kumar Raj — Full-Stack & AI Engineer</title>
+    <meta
+      name="description"
+      content="Full-stack and backend developer building AI-integrated products. Creator of LeetLens, ShopperAI, NxtVenture and more."
+    />
+    <meta name="author" content="Aryan Kumar Raj" />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Aryan Kumar Raj — Full-Stack & AI Engineer"
+    />
+    <meta
+      property="og:description"
+      content="Full-stack and backend developer building AI-integrated products. Creator of LeetLens, ShopperAI, NxtVenture and more."
+    />
+    <meta property="og:image" content="/leetlens.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;450;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Aryan-portfolio</title>
+
+    <script>
+      // Apply saved theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark = saved ? saved === "dark" : true;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.classList.toggle("light", !dark);
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
   </head>
 
   <body>

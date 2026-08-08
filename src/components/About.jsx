@@ -1,155 +1,167 @@
-import { color } from "motion";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./About.css";
+import Modal from "./Modal";
+import { useReveal } from "../hooks/useReveal";
 
-const SkillCategory = ({ title, skills }) => (
-  <div className="mb-2">
-    <span className="text-base font-bold text-black mr-2">{title}:</span>
-    <ul className="inline-flex flex-wrap gap-2 p-0 list-none align-middle">
-      {skills.map((skill) => (
-        <li
-          key={skill}
-          className="bg-white/10 px-3 py-1 rounded-full cursor-pointer transition-all duration-300 font-medium text-sm hover:bg-red-500 hover:text-white hover:scale-110 hover:shadow-lg shadow-red-500/40"
-        >
-          {skill}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+const SKILLS = [
+  {
+    title: "Languages",
+    icon: "◆",
+    items: ["C++", "JavaScript", "Python", "TypeScript", "C"],
+  },
+  {
+    title: "Frontend",
+    icon: "◈",
+    items: ["React", "Next.js", "Tailwind", "GSAP", "Three.js"],
+  },
+  {
+    title: "Backend",
+    icon: "▣",
+    items: ["Node.js", "Express", "FastAPI", "REST", "GraphQL", "JWT"],
+  },
+  {
+    title: "Data & Cloud",
+    icon: "◉",
+    items: ["MongoDB", "PostgreSQL", "Redis", "Firebase", "AWS", "Docker"],
+  },
+  {
+    title: "AI Engineering",
+    icon: "✦",
+    items: ["Groq / LLaMA", "Gemini", "RAG", "Embeddings", "Prompt Design"],
+  },
+  {
+    title: "Foundations",
+    icon: "▲",
+    items: ["DSA", "System Design", "OOP", "DBMS", "Operating Systems"],
+  },
+];
 
-const About = ({ isDark = true }) => {
+const About = () => {
   const [showResume, setShowResume] = useState(false);
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") setShowResume(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const openResume = () => setShowResume(true);
-  const closeResume = () => setShowResume(false);
+  useReveal([]);
 
   return (
-    <div className={`about ${isDark ? "dark" : "light"}`}>
-      <div className="about-card">
-        <aside className="about-avatar" aria-hidden="true">
-          <img
-            src="/avatar.png"
-            alt="Aryan avatar"
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
-        </aside>
-        <div className="details">
-          <h1>About Me</h1>
-          <p>
-            I am a final-year Computer Science student, passionate Full-Stack & Backend Developer who loves building intelligent, real-world web applications. My expertise lies in designing scalable REST APIs and deploying AI-integrated platforms. I regularly solve algorithmic problems on platforms like{" "}
+    <div className="about">
+      <header className="section-head reveal">
+        <span className="eyebrow">About me</span>
+        <h2 className="section-title">
+          Backend depth, <span className="grad-text">product instinct</span>
+        </h2>
+      </header>
+
+      {/* ---------- intro ---------- */}
+      <div className="about__intro">
+        <aside className="about__portrait reveal">
+          <div className="about__portrait-frame">
+            <img
+              src="/avatar.png"
+              alt="Aryan Kumar Raj"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          </div>
+          <div className="about__badges">
             <a
-              className="leetcode"
+              className="about__badge"
               href="https://leetcode.com/u/aryan8434/"
-              data-tooltip="Visit LeetCode"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit LeetCode"
             >
-              LeetCode
-            </a>{" "}
-            and{" "}
+              <strong>1500+</strong>
+              <span>LeetCode</span>
+            </a>
             <a
+              className="about__badge"
               href="https://www.geeksforgeeks.org/profile/aryan8434"
-              className="geeks"
-              data-tooltip="Visit GeeksForGeeks"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit GeeksForGeeks"
             >
-              GeeksForGeeks
-            </a>.
+              <strong>4★</strong>
+              <span>GeeksForGeeks</span>
+            </a>
+          </div>
+        </aside>
+
+        <div className="about__text reveal" style={{ "--reveal-delay": "90ms" }}>
+          <p className="about__lead">
+            I&apos;m a final-year Computer Science student who spends most of his
+            time on the parts of a product that other people don&apos;t see —
+            the API design, the data model, the reason a page loads in 300ms
+            instead of 3 seconds.
+          </p>
+          <p>
+            My work sits at the intersection of full-stack engineering and
+            applied AI. I&apos;ve shipped a LeetCode analytics platform that
+            generates hiring-readiness reports, an e-commerce flow driven
+            entirely by natural language, and a RAG service that answers
+            questions grounded in your own documents. Each one started as a
+            backend problem before it became an interface.
+          </p>
+          <p>
+            Outside of building, I practise algorithms daily on LeetCode and
+            GeeksForGeeks — it keeps the fundamentals sharp and it shows up in
+            the code I write.
           </p>
 
-          <div className="about-actions">
-            <button
-              onClick={openResume}
-              className="btn-primary"
-              aria-haspopup="dialog"
-            >
-              View Resume
+          <div className="about__actions">
+            <button className="btn btn-primary" onClick={() => setShowResume(true)}>
+              View résumé
             </button>
             <a
+              className="btn btn-ghost"
               href="https://github.com/aryan8434"
-              className="btn-github"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit GitHub"
             >
               GitHub
             </a>
             <a
+              className="btn btn-ghost"
               href="https://www.linkedin.com/in/aryan-kumar-raj-988587b3/"
-              className="btn-linkedin"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit LinkedIn"
             >
               LinkedIn
             </a>
           </div>
-          {showResume && (
-            <div
-              className="resume-overlay"
-              onClick={closeResume}
-              role="presentation"
-            >
-              <div
-                className="resume-content"
-                role="dialog"
-                aria-modal="true"
-                aria-label="Resume dialog"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className="resume-close bg-red-400 font-bold transition delay-50 hover:bg-red-600 hover:font-extrabold"
-                  onClick={closeResume}
-                  aria-label="Close resume"
-                >
-                  Close
-                </button>
-                <iframe
-                  src="/resume.pdf"
-                  title="Resume"
-                  className="resume-iframe"
-                />
-              </div>
-            </div>
-          )}
-          <br />
-          <br />
-
-          <h2>Skills</h2>
-          <div className="mt-8 skills-grid">
-            <SkillCategory
-              title="Programming Languages"
-              skills={["C++", "C", "Python", "JavaScript"]}
-            />
-            <SkillCategory
-              title="Backend"
-              skills={["Express.js", "Node.js", "System Design"]}
-            />
-            <SkillCategory
-              title="APIs & Auth"
-              skills={["REST APIs", "GraphQL", "JWT"]}
-            />
-            <SkillCategory
-              title="Databases & Cloud"
-              skills={["PostgreSQL", "MongoDB", "AWS"]}
-            />
-          </div>
         </div>
       </div>
+
+      {/* ---------- skills ---------- */}
+      <div className="about__block">
+        <h3 className="about__block-title reveal">Toolkit</h3>
+        <div className="about__skills">
+          {SKILLS.map((group, i) => (
+            <div
+              className="skillcard reveal"
+              key={group.title}
+              style={{ "--reveal-delay": `${i * 60}ms` }}
+            >
+              <div className="skillcard__head">
+                <span className="skillcard__icon">{group.icon}</span>
+                <h4>{group.title}</h4>
+              </div>
+              <ul>
+                {group.items.map((s) => (
+                  <li key={s} className="chip">
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Modal
+        open={showResume}
+        onClose={() => setShowResume(false)}
+        title="Aryan Kumar Raj — Résumé"
+        subtitle="Full-stack &amp; AI engineer · Updated 2026"
+        src="/resume.pdf"
+        downloadName="Aryan-Kumar-Raj-Resume.pdf"
+      />
     </div>
   );
 };

@@ -33,6 +33,9 @@ const db = admin.firestore();
 const app = express();
 const port = Number(process.env.ADMIN_API_PORT || 8787);
 
+/** The number shown to the very first visitor on the public footer strip. */
+const VISITOR_NUMBER_BASE = 345;
+
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
@@ -104,7 +107,22 @@ app.post("/api/visit", async (request, response) => {
       visitedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    response.json({ ok: true, id: doc.id });
+    // Public-facing visitor number for the footer strip. The portfolio shows
+    // its first visitor as #345, so the stored total is offset to match.
+    // A failed aggregation must not cost us the visit record — the client
+    // falls back to a local number when this is absent.
+    let visitorNo = null;
+    try {
+      const snapshot = await db.collection("portfolio_visits").count().get();
+      const total = snapshot.data().count;
+      if (Number.isFinite(total) && total > 0) {
+        visitorNo = VISITOR_NUMBER_BASE - 1 + total;
+      }
+    } catch (countError) {
+      console.warn("Visitor count unavailable:", countError?.message);
+    }
+
+    response.json({ ok: true, id: doc.id, visitorNo });
   } catch (error) {
     console.error("Failed to store visit:", error);
     response.status(500).json({

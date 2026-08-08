@@ -114,6 +114,16 @@ export const logPortfolioVisit = async () => {
 
   const result = await response.json().catch(() => null);
 
+  // The footer strip shows a live visitor number. It starts from a local
+  // fallback and upgrades to the real figure once the API confirms it.
+  if (Number.isFinite(Number(result?.visitorNo))) {
+    window.dispatchEvent(
+      new CustomEvent("visitLogged", {
+        detail: { visitorNo: Number(result.visitorNo) },
+      }),
+    );
+  }
+
   // Ask for precise coordinates in the background and patch the record.
   if (result?.id) {
     requestPreciseLocation()

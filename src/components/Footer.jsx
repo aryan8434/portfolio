@@ -18,7 +18,7 @@ const Footer = () => (
         <span className="footer__mark">AR</span>
         <div>
           <strong>Aryan Kumar Raj</strong>
-          <span>Full-stack &amp; AI engineer · Kota, India</span>
+          <span>AI benchmark author · India</span>
         </div>
       </div>
 

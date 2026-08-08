@@ -176,7 +176,7 @@ const Contact = () => {
 
           <div className="contact__location">
             <span className="contact__ping" />
-            Based in Kota, Rajasthan · open to relocate
+            Based in India · open to relocate
           </div>
 
           <ul className="contact__socials">

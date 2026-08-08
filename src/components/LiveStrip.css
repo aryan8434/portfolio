@@ -1,0 +1,269 @@
+/* Pinned just beneath the navbar. It starts life at the top of the document,
+   so it is effectively stuck from first paint and stays put while scrolling. */
+.livestrip-bar {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 90;
+  padding: 8px 0;
+}
+
+.livestrip {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 28px;
+  width: 100%;
+  padding: 11px 18px 11px 34px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  /* Opaque enough that page content scrolling underneath never shows through. */
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Live pulse dot, anchored to the left edge of the strip. */
+.livestrip__pulse {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  animation: livestrip-pulse 2.4s var(--ease-out) infinite;
+}
+
+@keyframes livestrip-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(52, 211, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+.livestrip__cell {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.livestrip__label {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.livestrip__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.livestrip__value strong {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: transparent;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.livestrip__value em {
+  font-style: normal;
+  color: var(--text-mute);
+}
+
+.livestrip__value svg {
+  flex: none;
+  opacity: 0.85;
+}
+
+/* ---------- manual location picker ---------- */
+
+.livestrip__cell--location {
+  position: relative;
+}
+
+.livestrip__value--action {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px dashed transparent;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+.livestrip__value--action:hover {
+  color: var(--text);
+  border-bottom-color: var(--hairline-strong);
+}
+
+.livestrip__search {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 20;
+  width: min(280px, 76vw);
+  padding: 10px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elev);
+  box-shadow: var(--shadow);
+}
+
+.livestrip__search form {
+  display: flex;
+  gap: 6px;
+}
+
+.livestrip__search input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--text);
+  background: var(--surface-strong);
+  border: 1px solid var(--hairline);
+}
+
+.livestrip__search input:focus {
+  outline: none;
+  border-color: rgba(139, 92, 246, 0.6);
+}
+
+.livestrip__search form button {
+  flex: none;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent-gradient);
+}
+
+.livestrip__search form button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.livestrip__search-note {
+  margin-top: 8px;
+  font-size: 0.76rem;
+  color: var(--text-mute);
+}
+
+.livestrip__search ul {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.livestrip__search ul button {
+  display: block;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  background: none;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.livestrip__search ul button:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+/* ---------- mobile ---------- */
+
+/* The bar is pinned for the whole visit, so on a phone it collapses to a
+   single slim line: labels drop to screen-reader-only and the icons carry the
+   meaning. Anything too wide scrolls sideways rather than growing taller. */
+@media (max-width: 720px) {
+  .livestrip-bar {
+    padding: 6px 0;
+  }
+
+  .livestrip {
+    flex-wrap: nowrap;
+    gap: 0 14px;
+    padding: 8px 12px 8px 26px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .livestrip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .livestrip__pulse {
+    left: 11px;
+  }
+
+  .livestrip__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .livestrip__cell {
+    flex: none;
+  }
+
+  .livestrip__value {
+    font-size: 0.76rem;
+  }
+
+  .livestrip__value strong {
+    font-size: 0.82rem;
+  }
+
+  /* Anchored to the strip, not the cell, so it can't overflow the viewport. */
+  .livestrip__search {
+    position: fixed;
+    top: calc(var(--nav-h) + 58px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(320px, 90vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .livestrip__pulse {
+    animation: none;
+  }
+}

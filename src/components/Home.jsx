@@ -101,8 +101,8 @@ const Home = ({ isDark = true }) => {
         </h1>
 
         <p className={`hero__lede ${on(4)}`} style={{ "--d": "80ms" }}>
-          Final-year CS student and full-stack developer from Kota, India. I
-          design scalable backends and ship AI-integrated web apps — from a
+          AI benchmark author from India. I design the tasks that measure LLMs
+          and frontier models — and I ship AI-integrated web apps, from a
           LeetCode analytics platform to a conversational commerce engine.
         </p>
 
@@ -131,12 +131,13 @@ const Home = ({ isDark = true }) => {
           <button className="btn btn-ghost" onClick={() => setShowResume(true)}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
-                d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"
+                d="M2.4 12S6.2 5.4 12 5.4 21.6 12 21.6 12 17.8 18.6 12 18.6 2.4 12 2.4 12z"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
+              <circle cx="12" cy="12" r="3.1" stroke="currentColor" strokeWidth="2" />
             </svg>
             View Resume
           </button>

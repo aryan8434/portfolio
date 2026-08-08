@@ -183,7 +183,8 @@ body::-webkit-scrollbar-thumb {
   position: relative;
   width: 100%;
   padding: clamp(80px, 11vh, 130px) 0 clamp(70px, 9vh, 110px);
-  scroll-margin-top: var(--nav-h);
+  /* Clears the navbar *and* the sticky live strip parked beneath it. */
+  scroll-margin-top: calc(var(--nav-h) + 64px);
 }
 
 .section-head {
@@ -489,4 +490,113 @@ body::-webkit-scrollbar-thumb {
   background: var(--accent-gradient);
   z-index: 120;
   will-change: transform;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  :root {
+    --shell: min(1180px, 90vw);
+    --nav-h: 64px;
+  }
+
+  .section {
+    padding: clamp(56px, 8vh, 82px) 0 clamp(46px, 7vh, 68px);
+  }
+
+  .section-head {
+    margin-bottom: 30px;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 8vw, 2.3rem);
+  }
+
+  .section-sub {
+    font-size: 0.95rem;
+    line-height: 1.62;
+  }
+
+  /* Comfortable thumb targets — 44px is the accessible minimum. */
+  .btn {
+    --btn-pad: 12px 20px;
+    min-height: 44px;
+    font-size: 0.88rem;
+  }
+
+  .btn-sm {
+    --btn-pad: 9px 15px;
+    min-height: 38px;
+  }
+
+  /* Hover lifts read as stuck states on touch, so drop them. */
+  .btn:hover {
+    transform: none;
+  }
+
+  .eyebrow {
+    font-size: 10.5px;
+    padding: 6px 12px;
+    letter-spacing: 0.18em;
+  }
+
+  /* The aurora blobs are the most expensive paint on the page — a cheaper
+     blur and no drift keeps scrolling smooth without losing the look. */
+  .aurora span {
+    filter: blur(52px);
+    animation: none;
+  }
+
+  .grain {
+    display: none;
+  }
+}
+
+/* ============================================================
+   BRAND BUTTONS + TECH CHIPS
+   ============================================================ */
+
+/* Solid brand-coloured buttons (LinkedIn, LeetCode). --brand drives the fill,
+   so a new platform only needs its own colour, not a new rule. */
+.btn-brand {
+  color: #fff;
+  background: var(--brand);
+  border-color: transparent;
+  box-shadow: 0 10px 26px -14px var(--brand);
+}
+
+.btn-brand:hover {
+  background: color-mix(in srgb, var(--brand) 86%, #fff);
+  box-shadow: 0 16px 34px -14px var(--brand);
+}
+
+.btn-brand svg {
+  flex: none;
+}
+
+.btn-linkedin {
+  --brand: #0a66c2;
+}
+
+.btn-leetcode {
+  --brand: #12a150;
+}
+
+/* Each technology carries its own brand colour as a leading dot. */
+.chip--tech::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tech);
+  box-shadow: 0 0 8px -1px var(--tech);
+}
+
+.chip--tech:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--tech) 55%, transparent);
+  background: color-mix(in srgb, var(--tech) 13%, transparent);
 }

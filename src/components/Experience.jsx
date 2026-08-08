@@ -7,19 +7,29 @@ const EXPERIENCE = [
   {
     id: "handshake",
     period: "Jul 2026 — Present",
-    role: "AI Evaluation Engineer",
-    org: "Handshake",
+    role: "AI Data Contributor",
+    org: "Handshake AI (Project Dynamo)",
     type: "Contract · Remote",
     current: true,
     summary:
-      "Author benchmark tasks used to measure how well AI coding agents perform on real engineering work.",
+      "I write the question papers that test AI coding agents. Each task is a real programming job, and the AI has to finish it on its own. My job is to set the task, write the correct answer, and build a checker that says pass or fail.",
     points: [
-      "Design end-to-end evaluation tasks across software engineering, security, systems & infrastructure, data science, build/release management, and formal reasoning.",
-      "Ship each task as a complete harness: a precise specification, a reference oracle solution, a pinned containerised environment, and an automated verifier that grades agent output on observable behaviour.",
-      "Run adversarial QC on evaluations — probing for reward hacking such as agents symlinking graded output at golden files, leaking expected results into the agent image, or otherwise passing the verifier without solving the task.",
-      "Calibrate task difficulty and document verification rationale so results stay comparable across the benchmark suite.",
+      "I made a task where a program must save every payment only once, even when many people click at the same time. I wrote it in Python with a PostgreSQL database, and old records are cleaned up on their own. It passed all 32 checks.",
+      "I made a data task where the same information came in three different file types — CSV, JSONL and Parquet. The AI had to join them into one clean table and figure out which rows belonged to the same person.",
+      "I made a bug-fixing task on a C++ and Node.js program that was slowly eating memory and breaking when two threads ran together. The AI had to find the leak and the race, and repair it.",
+      "I made system-level tasks too, like moving a program from glibc to musl so it still runs on a smaller Linux, and a maths puzzle checked by an automatic solver.",
+      "Nobody grades these by hand. I pack each task inside Docker so it runs the same on any computer, and GitHub Actions (CI/CD) runs the tests, code checks and speed checks automatically every single time.",
     ],
-    stack: ["Python", "Docker", "pytest", "SQLite", "Bash", "Task Design"],
+    stack: [
+      "Python",
+      "PostgreSQL",
+      "Docker",
+      "pytest",
+      "GitHub Actions",
+      "CI/CD",
+      "C++",
+      "Node.js",
+    ],
   },
   {
     id: "proscon",
@@ -110,9 +120,9 @@ const Experience = () => {
           Where I&apos;ve <span className="grad-text">done the work</span>
         </h2>
         <p className="section-sub">
-          Two frontend internships, and current contract work authoring the
-          benchmark tasks that measure AI coding agents. Certificates are
-          attached — click one to read it.
+          Two frontend internships, and right now I write and check the test
+          tasks that measure how good AI coding agents really are. Certificates
+          are attached — click one to read it.
         </p>
       </header>
 

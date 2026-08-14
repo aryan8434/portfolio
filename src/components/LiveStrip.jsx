@@ -10,7 +10,7 @@ import "./LiveStrip.css";
  * so each cell keeps its own state and falls back to a readable dash.
  */
 
-const VISITOR_BASE = 345;
+const VISITOR_BASE = 457;
 
 /* ------------------------------------------------------------------ *
  * Visitor number
@@ -264,6 +264,16 @@ const LiveStrip = () => {
   useEffect(() => {
     setVisitorNo(readLocalVisitorNo());
 
+    import("../services/visitorService").then(({ getOrIncrementFirestoreVisitorCount }) => {
+      getOrIncrementFirestoreVisitorCount(VISITOR_BASE).then((fsCount) => {
+        if (fsCount !== null) {
+          setVisitorNo(fsCount);
+          window.localStorage.setItem("pf_visitor_no", String(fsCount));
+          window.localStorage.setItem("pf_visit_count", String(fsCount));
+        }
+      });
+    }).catch(() => {});
+
     const onLogged = (event) => {
       const serverNo = Number(event?.detail?.visitorNo);
       if (Number.isFinite(serverNo) && serverNo > 0) setVisitorNo(serverNo);
@@ -396,7 +406,7 @@ const LiveStrip = () => {
         >
           {place ? (
             <>
-              <span aria-hidden="true">📍</span> {place}
+              YOUR'E LOCACTED AT {place.toUpperCase()} AND TEMP IS {weather ? `${weather.temp}°C ${weather.icon}` : '...'}
             </>
           ) : locationFailed ? (
             <em>set location</em>
@@ -449,17 +459,19 @@ const LiveStrip = () => {
         )}
       </div>
 
+
+
       <div className="livestrip__cell">
-        <span className="livestrip__label">Weather</span>
+        <span className="livestrip__label">Academics</span>
         <span className="livestrip__value">
-          {weather ? (
-            <>
-              <span aria-hidden="true">{weather.icon}</span> {weather.temp}°C ·{" "}
-              {weather.label}
-            </>
-          ) : (
-            <em>checking…</em>
-          )}
+          8.24 CGPA
+        </span>
+      </div>
+
+      <div className="livestrip__cell">
+        <span className="livestrip__label">Leetcode</span>
+        <span className="livestrip__value">
+          1622 Rating
         </span>
       </div>
 

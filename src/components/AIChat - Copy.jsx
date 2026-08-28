@@ -315,7 +315,7 @@ const AIChat = ({ isDark = true }) => {
 
       const completion = await groq.chat.completions.create({
         messages: apiMessages,
-        model: "llama-3.1-8b-instant",
+        model: "llama-3.3-70b-versatile",
         temperature: 0.7,
         max_tokens: 1024,
       });
@@ -347,7 +347,7 @@ const AIChat = ({ isDark = true }) => {
       }
     } catch (error) {
       console.error("Chat Error:", error);
-      const errorMsg = `Connection Error: ${error.message || "Unknown error"}. Check console for details.`;
+      const errorMsg = "⚠️ API limit exceeded. Please recharge / top up API credits or try again later.";
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: errorMsg },

@@ -12,9 +12,9 @@ const ROLES = [
 
 const STATS = [
   { value: "13+", label: "Projects shipped" },
-  { value: "1500+", label: "LeetCode rating" },
+  { value: "1622", label: "LeetCode rating" },
   { value: "2", label: "Internships" },
-  { value: "8.13", label: "CGPA" },
+  { value: "8.24", label: "CGPA" },
 ];
 
 const MARQUEE = [

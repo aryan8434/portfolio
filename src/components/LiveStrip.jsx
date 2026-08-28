@@ -10,31 +10,27 @@ import "./LiveStrip.css";
  * so each cell keeps its own state and falls back to a readable dash.
  */
 
-const VISITOR_BASE = 457;
+const VISITOR_BASE = 345;
 
 /* ------------------------------------------------------------------ *
  * Visitor number
  * ------------------------------------------------------------------ */
 
 /**
- * The server (admin API) is the source of truth when it's reachable. When it
- * isn't — the API defaults to localhost and often simply isn't deployed — we
- * fall back to a per-browser number so the strip still reads sensibly.
- * A returning visitor keeps the number they were given the first time.
+ * Increments the local visit count on every visit as an immediate fallback,
+ * while Firestore syncs the global live visitor counter.
  */
-const readLocalVisitorNo = () => {
+const incrementLocalVisitorNo = () => {
   try {
-    const mine = window.localStorage.getItem("pf_visitor_no");
-    if (mine && Number.isFinite(Number(mine))) return Number(mine);
-
-    const last = Number(window.localStorage.getItem("pf_visit_count"));
-    const next = Number.isFinite(last) && last >= VISITOR_BASE ? last + 1 : VISITOR_BASE;
+    const raw = window.localStorage.getItem("pf_visit_count") || window.localStorage.getItem("pf_visitor_no");
+    const last = Number(raw);
+    const next = Number.isFinite(last) && last >= VISITOR_BASE ? last + 1 : VISITOR_BASE + 1;
 
     window.localStorage.setItem("pf_visit_count", String(next));
     window.localStorage.setItem("pf_visitor_no", String(next));
     return next;
   } catch {
-    return VISITOR_BASE;
+    return VISITOR_BASE + 1;
   }
 };
 
@@ -249,20 +245,70 @@ const LiveStrip = () => {
   /* Manual location entry, for visitors whose location we can't detect. */
   const [locationFailed, setLocationFailed] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [searchState, setSearchState] = useState("idle"); // idle | busy | empty | error
 
+  const locationCellRef = useRef(null);
   const displayedNo = useCountUp(visitorNo);
+
+  const closeSearch = () => {
+    if (!isSearchOpen || isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setSearchOpen(false);
+      setIsClosing(false);
+      setQuery("");
+      setResults([]);
+      setSearchState("idle");
+    }, 200);
+  };
+
+  const toggleSearch = () => {
+    if (isSearchOpen) {
+      closeSearch();
+    } else {
+      setSearchOpen(true);
+      setIsClosing(false);
+    }
+  };
+
+  /* Dismiss popup when clicking anywhere outside or pressing Escape */
+  useEffect(() => {
+    if (!isSearchOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (locationCellRef.current && !locationCellRef.current.contains(event.target)) {
+        closeSearch();
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        closeSearch();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isSearchOpen, isClosing]);
 
   /* OS is synchronous — resolve it immediately. */
   useEffect(() => {
     setOs(detectOs());
   }, []);
 
-  /* Visitor number: local straight away, upgraded if the API answers. */
+  /* Visitor number: local increment straight away, then synced with Firestore. */
   useEffect(() => {
-    setVisitorNo(readLocalVisitorNo());
+    setVisitorNo(incrementLocalVisitorNo());
 
     import("../services/visitorService").then(({ getOrIncrementFirestoreVisitorCount }) => {
       getOrIncrementFirestoreVisitorCount(VISITOR_BASE).then((fsCount) => {
@@ -357,10 +403,7 @@ const LiveStrip = () => {
   const choosePlace = async (choice) => {
     setPlace(choice.short);
     setLocationFailed(false);
-    setSearchOpen(false);
-    setQuery("");
-    setResults([]);
-    setSearchState("idle");
+    closeSearch();
 
     try {
       window.localStorage.setItem(
@@ -394,19 +437,19 @@ const LiveStrip = () => {
         </span>
       </div>
 
-      <div className="livestrip__cell livestrip__cell--location">
+      <div className="livestrip__cell livestrip__cell--location" ref={locationCellRef}>
         <span className="livestrip__label">Location</span>
 
         <button
           type="button"
           className="livestrip__value livestrip__value--action"
-          onClick={() => setSearchOpen((open) => !open)}
+          onClick={toggleSearch}
           title={place ? `${place} — click to change` : "Set your location"}
           aria-expanded={isSearchOpen}
         >
           {place ? (
             <>
-              YOUR'E LOCACTED AT {place.toUpperCase()} AND TEMP IS {weather ? `${weather.temp}°C ${weather.icon}` : '...'}
+              YOU'RE LOCATED AT {place.toUpperCase()} AND TEMP IS {weather ? `${weather.temp}°C ${weather.icon}` : '...'}
             </>
           ) : locationFailed ? (
             <em>set location</em>
@@ -416,7 +459,7 @@ const LiveStrip = () => {
         </button>
 
         {isSearchOpen && (
-          <div className="livestrip__search">
+          <div className={`livestrip__search ${isClosing ? "livestrip__search--closing" : ""}`}>
             <form onSubmit={runSearch}>
               <input
                 autoFocus
@@ -460,20 +503,6 @@ const LiveStrip = () => {
       </div>
 
 
-
-      <div className="livestrip__cell">
-        <span className="livestrip__label">Academics</span>
-        <span className="livestrip__value">
-          8.24 CGPA
-        </span>
-      </div>
-
-      <div className="livestrip__cell">
-        <span className="livestrip__label">Leetcode</span>
-        <span className="livestrip__value">
-          1622 Rating
-        </span>
-      </div>
 
       <div className="livestrip__cell">
         <span className="livestrip__label">You&apos;re on</span>

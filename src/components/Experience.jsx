@@ -73,11 +73,11 @@ const EXPERIENCE = [
     period: "2022 — 2026",
     role: "B.Tech, Computer Science & Engineering",
     org: "Rajasthan Technical University, Kota",
-    type: "CGPA 8.13",
+    type: "CGPA 8.24",
     summary:
       "Final year, alongside daily competitive programming practice.",
     points: [
-      "1500+ LeetCode rating and 4★ on GeeksForGeeks.",
+      "1622 LeetCode rating and 4★ on GeeksForGeeks.",
       "Coursework in data structures, algorithms, DBMS, operating systems and system design.",
     ],
     stack: ["DSA", "DBMS", "Operating Systems", "System Design"],

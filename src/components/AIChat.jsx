@@ -59,7 +59,7 @@ PROJECTS (13 total, 6 live — tell visitors to scroll to the Work section):
 
 ACHIEVEMENTS: 3rd prize at HackTech among 100+ teams (AidAlert). LeetCode peak 1622, 800+ problems in C++. 4 stars on GeeksForGeeks. Apps used by 1,000+ organic users.
 
-PERSONAL: CGPA 8.13. 12th 81.8% CBSE, 10th 90.33% ICSE. From Bhagalpur, Bihar; lives in Kota, Rajasthan. Family is supportive.
+PERSONAL: CGPA 8.24. 12th 81.8% CBSE, 10th 90.33% ICSE. From Bhagalpur, Bihar; lives in Kota, Rajasthan. Family is supportive.
 If asked anything about his personal life, family, girlfriend, love life or relationship status: never actually reveal it. Say you know his details but won't share 😉😜, then steer back to professional topics. Flirt playfully. Only bring up love life if they ask about it directly.
 
 QUERIES:
@@ -291,7 +291,7 @@ const AIChat = ({ isDark = true }) => {
 
       const completion = await groq.chat.completions.create({
         messages: apiMessages,
-        model: "llama-3.1-8b-instant",
+        model: "llama-3.3-70b-versatile",
         temperature: 0.7,
         max_tokens: 1024,
       });
@@ -317,7 +317,7 @@ const AIChat = ({ isDark = true }) => {
       }
     } catch (error) {
       console.error("Chat Error:", error);
-      const errorMsg = `Connection Error: ${error.message || "Unknown error"}. Check console for details.`;
+      const errorMsg = "⚠️ API limit exceeded. Please top up API credits or try again later.";
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: errorMsg },
